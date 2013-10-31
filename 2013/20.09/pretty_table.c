@@ -10,25 +10,11 @@
 #include <stdlib.h>
 #include <memory.h>           
 
-
-int main(int argc, char **argv) {
-    int n = 0, m = 0, i, j, prev, above, *a;
-    int cellsize = 8;
+int outputTable(int n, int m, int cellsize) {
+	int i, j, prev, above, *a;
     char *strDelim, formatModifier[] = "%_d|";
     
-    if(argc < 3) {
-         printf("Usage: pretty_table.exe rows columns [cellsize]\n");
-         return 0;
-    }
-    
-    sscanf(argv[1],  "%d", &n);
-    sscanf(argv[2],  "%d", &m);  
-    
-    // Это что бы вывод был регулировался значением cellsize (при cellsize > 9 в любом случае уже будет плохо)
-    if(argc > 3) { 
-        sscanf(argv[3],  "%d", &cellsize); 
-    }
-    formatModifier[1] = cellsize + '0';
+	formatModifier[1] = cellsize + '0';
     strDelim = (char*)malloc(sizeof(char) * cellsize + 2);
     for(i = 0; i < cellsize; i++) {
         strDelim[i] = '-';
@@ -64,5 +50,23 @@ int main(int argc, char **argv) {
         }
         printf("\n");
     }
+}
+
+int main(int argc, char **argv) {
+	int n = 0, m = 0, cellsize = 8;
+	 
+	if(argc < 3) {
+        printf("Usage: pretty_table.exe rows columns [cellsize]\n");
+        return 0;
+    }
+	 
+    sscanf(argv[1],  "%d", &n);
+    sscanf(argv[2],  "%d", &m);  
+    
+    // Это что бы вывод был регулировался значением cellsize (при cellsize > 9 в любом случае уже будет плохо)
+    if(argc > 3) { 
+        sscanf(argv[3],  "%d", &cellsize); 
+    }
+    outputTable(n, m, cellsize);
     return 0;
 }

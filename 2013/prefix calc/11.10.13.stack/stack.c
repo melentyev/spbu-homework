@@ -7,20 +7,20 @@
 #include <stdlib.h>
 #include "stack.h"
 
-stack create() {
+stack stack_create() {
     stack c;
     c.top = NULL;
     return c;
 }
 
-void push(stack *c, int val) {
+void stack_push(stack *c, int val) {
     stackElement *el = (stackElement*)malloc(sizeof(stackElement));
     el->val = val;
     el->_next = c->top;
     c->top = el;
 }
 
-int size(stack *c) {
+int stack_size(stack *c) {
     int res = 0;
     stackElement *ptr = c->top;
     while(ptr != NULL) {
@@ -30,7 +30,7 @@ int size(stack *c) {
     return res;
 }
 
-int pop(stack *c) {
+int stack_pop(stack *c) {
     stackElement *ptr = c->top;
     int val = c->top->val;
     c->top = c->top->_next;
@@ -38,10 +38,10 @@ int pop(stack *c) {
     return val;
 }
 
-int empty(stack *c) {
-    return size(c) == 0;
+int stack_empty(stack *c) {
+    return (c->top == NULL);
 }
 
-void dup(stack *c) {
-    push(c, c->top->val);
+int stack_dup(stack *c) {
+    return (!stack_empty(c) ? stack_push(c, c->top->val), 1 : 0);
 }

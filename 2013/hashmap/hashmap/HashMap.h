@@ -19,27 +19,20 @@ class HashMap {
     element *data;
     HashFunction hash;
     Comparator comp;
+    void _insert_key(int cell, const K &newKey);
     void _insert_list(int cell, const K &newKey, const V &newVal);
     void allocate_more(int oldCapacity);
 public:
     HashMap();
     void insert(const K &k, const V &v);
-   
     V* find(const K &k, unsigned int *calculatedHash = NULL);
     void iter(std::tr1::function<void(K, V)> f);
-
+    V& operator[](const K &k); 
     unsigned int size() {
         return _size;
     };
-    ~HashMap() {
-        for(unsigned int i = 0; i < capacity; i++) {
-            delete[] data[i].values;
-            delete[] data[i].keys;
-        }
-        delete data;
-    }
+    ~HashMap();
 };
-
 
 template <class K, class V, class HashFunction, class Comparator>
 HashMap<K, V, HashFunction, Comparator>::HashMap() {
@@ -107,7 +100,7 @@ void HashMap<K, V, HashFunction, Comparator>::allocate_more(int oldCapacity) {
 }
 
 template <class K, class V, class HashFunction, class Comparator>
-void HashMap<K, V, HashFunction, Comparator>::_insert_list(int cell, const K &newKey, const V &newVal) {
+void HashMap<K, V, HashFunction, Comparator>::_insert_key(int cell, const K &newKey) {
     HashMap<K, V, HashFunction, Comparator>::element *e = this->data + cell;
     V *newValues = new V[e->count + 1];
     K *newKeys = new K[e->count + 1];
@@ -119,12 +112,18 @@ void HashMap<K, V, HashFunction, Comparator>::_insert_list(int cell, const K &ne
     delete[] e->keys;
     e->values = newValues;
     e->keys = newKeys;
-    e->values[e->count] = newVal;
     e->keys[e->count] = newKey;
     if (e->count == 0) {
         used_cells++;
     }
     e->count++;
+}
+
+template <class K, class V, class HashFunction, class Comparator>
+void HashMap<K, V, HashFunction, Comparator>::_insert_list(int cell, const K &newKey, const V &newVal) {
+    _insert_key(cell, newKey);
+    element *e = this->data + cell;
+    e->values[e->count - 1] = newVal;
 }
 
 template<class K, class V, class HashFunction, class Comparator>
@@ -136,4 +135,25 @@ void HashMap<K, V, HashFunction, Comparator>::iter(std::tr1::function<void(K, V)
             f(e->keys[j], e->values[j]);
         }
     }
+}
+
+template<class K, class V, class HashFunction, class Comparator>
+V& HashMap<K, V, HashFunction, Comparator>::operator[](const K &k) {
+    unsigned int index = hash(k) % capacity;
+    element *e = data + index;
+    for(unsigned int i = 0; i < e->count; i++) {
+        if (comp(e->keys[i], k) ) {
+            return *(e->values + i);
+        }
+    }
+    this->_insert_list(index, K);
+}
+
+template<class K, class V, class HashFunction, class Comparator>
+HashMap<K, V, HashFunction, Comparator>::~HashMap() {
+    for(unsigned int i = 0; i < capacity; i++) {
+        delete[] data[i].values;
+        delete[] data[i].keys;
+    }
+    delete data;
 }

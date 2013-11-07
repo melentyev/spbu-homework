@@ -18,6 +18,9 @@ namespace MyHelpers {
         }
     };
 
+    /**
+     *
+     */
     class String {
         char *s;
     public:
@@ -46,6 +49,9 @@ namespace MyHelpers {
         }
         unsigned int length() const {
             return strlen(s);
+        }
+        bool operator < (const String &s) const {
+            return false;
         }
         friend StringHash;
         friend StringComp;

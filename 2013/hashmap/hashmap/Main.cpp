@@ -3,6 +3,7 @@
 #include <windows.h>
 #include "HashMap.h"
 #include "Helpers.h"
+#include <utility>
 
 using namespace MyHelpers;
 
@@ -28,8 +29,13 @@ int main() {
     while(hm.size() < 100000 && c != EOF);
     delete word;
     int cnt = 0;
-    hm.iter([&cnt](String &k, int v) -> void { printf("%s: %d\n", k.c_str(), v); cnt++; });
-    printf("%d\n", cnt);
+    std::pair<int, String> *ar = new std::pair<int, String>[hm.size()];
+    hm.iter([&ar, &cnt](String &k, int v) -> void { ar[cnt++] = std::make_pair(v, k); });
+    std::sort(ar, ar + cnt);
+    std::reverse(ar, ar + cnt);
+    for(int i = 0; i < 30; i++) {
+        printf("%d - %s\n", ar[i].first, ar[i].second.c_str() ); 
+    }
     system("pause");
     return 0;
 }

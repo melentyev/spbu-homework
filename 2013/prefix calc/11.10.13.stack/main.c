@@ -1,7 +1,8 @@
 /**
- * Kirill Melentyev (c) 2013 
- * Стековый калькулятор
- */
+Kirill Melentyev (c) 2013 
+Стековый калькулятор
+main.c
+*/
   
 #include <stdio.h>
 #include <stdlib.h>
@@ -15,8 +16,8 @@
 int run() {
     int a, b;
     FILE *in = stdin; 
-    int done = FALSE, first;
-    stack s = stack_create();
+    int done = FALSE;
+    Stack s = stack_create();
     char cmd[20];
     do {
         fgets(cmd, 20, in);
@@ -76,6 +77,9 @@ int run() {
             continue;
         }
     } while(!done);
+    while(!stack_empty(&s) ) {
+        stack_pop(&s);
+    }
     return TRUE;
 }
 

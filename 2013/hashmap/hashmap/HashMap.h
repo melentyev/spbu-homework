@@ -1,11 +1,22 @@
 /**
- *
- */
+Kirill Melentyev (c) 2013 
+hashmap
+Ўаблонный класс HashMap, выдел€ющий дополнительную пам€ть при необходимости
+*/
+
 
 #pragma once
 #include <algorithm>
 #include <functional>
-
+#include <vector>
+/**
+@detailed ’эш таблица, сама управл€ет пам€тью.
+ѕараметры шаблона:
+- K - тип ключа
+- V - тип значени€
+- HashFunction - функтор, возвращает хэш дл€ сущности типа K
+- Comparator - функтор, сравнивает две сущности типа K, возвращает true (если равны) / false (иначе)
+*/
 template <class K, class V, class HashFunction = AddressHash<K>, class Comparator = std::equal_to<K> >
 class HashMap {
     static const unsigned int initialCapacity = 4;
@@ -19,12 +30,13 @@ class HashMap {
     element *data;
     HashFunction hash;
     Comparator comp;
-    void _insert_key(int cell, const K &newKey);
-    void _insert_list(int cell, const K &newKey, const V &newVal);
+    V& _insert_key(int cell, const K &newKey, bool default_constructor_call = true);
+    V& _insert_list(int cell, const K &newKey, const V &newVal);
     void allocate_more(int oldCapacity);
+    V& insert_key(const K &k);
 public:
     HashMap();
-    void insert(const K &k, const V &v);
+    V& insert(const K &k, const V &v);
     V* find(const K &k, unsigned int *calculatedHash = NULL);
     void iter(std::tr1::function<void(K, V)> f);
     V& operator[](const K &k); 
@@ -49,21 +61,19 @@ HashMap<K, V, HashFunction, Comparator>::HashMap() {
 }
 
 template <class K, class V, class HashFunction, class Comparator>
-void HashMap<K, V, HashFunction, Comparator>::insert(const K &k, const V &v) {
-    V *found = find(k);
+V& HashMap<K, V, HashFunction, Comparator>::insert_key(const K &k) {
+    V* found = find(k);
     if(!found) { 
         if (used_cells >= capacity / 2) {
             allocate_more(capacity);
         }
         unsigned int h = hash(k) % capacity;
-        _insert_list(h, k, v);
+        found = &_insert_key(h, k);
         if(!reallocating) {
             _size++;
         }
     }
-    else {
-        *found = v;
-    }
+    return *found;
 }
 
 template <class K, class V, class HashFunction, class Comparator>
@@ -100,7 +110,7 @@ void HashMap<K, V, HashFunction, Comparator>::allocate_more(int oldCapacity) {
 }
 
 template <class K, class V, class HashFunction, class Comparator>
-void HashMap<K, V, HashFunction, Comparator>::_insert_key(int cell, const K &newKey) {
+V& HashMap<K, V, HashFunction, Comparator>::_insert_key(int cell, const K &newKey, bool default_constructor_call = true) {
     HashMap<K, V, HashFunction, Comparator>::element *e = this->data + cell;
     V *newValues = new V[e->count + 1];
     K *newKeys = new K[e->count + 1];
@@ -113,17 +123,23 @@ void HashMap<K, V, HashFunction, Comparator>::_insert_key(int cell, const K &new
     e->values = newValues;
     e->keys = newKeys;
     e->keys[e->count] = newKey;
+    if (default_constructor_call && std::is_default_constructible<V>::value) {
+        e->values[e->count] = V();
+    }
     if (e->count == 0) {
         used_cells++;
     }
-    e->count++;
+    return e->values[e->count++];
 }
 
 template <class K, class V, class HashFunction, class Comparator>
-void HashMap<K, V, HashFunction, Comparator>::_insert_list(int cell, const K &newKey, const V &newVal) {
-    _insert_key(cell, newKey);
-    element *e = this->data + cell;
-    e->values[e->count - 1] = newVal;
+V& HashMap<K, V, HashFunction, Comparator>::_insert_list(int cell, const K &newKey, const V &newVal) {
+    return (_insert_key(cell, newKey) = newVal);
+}
+
+template <class K, class V, class HashFunction, class Comparator>
+V& HashMap<K, V, HashFunction, Comparator>::insert(const K &k, const V &v) {
+    return (insert_key(k) = v);
 }
 
 template<class K, class V, class HashFunction, class Comparator>
@@ -146,7 +162,7 @@ V& HashMap<K, V, HashFunction, Comparator>::operator[](const K &k) {
             return *(e->values + i);
         }
     }
-    this->_insert_list(index, K);
+    return insert_key(k);
 }
 
 template<class K, class V, class HashFunction, class Comparator>

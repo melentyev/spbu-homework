@@ -1,22 +1,27 @@
+/**
+Kirill Melentyev (c) 2013 
+Стековый калькулятор
+stack.h
+*/
 #ifndef _STACK_H_
 #define _STACK_H_
 
 
-typedef struct stackElement {
-    struct stackElement *_next;
+typedef struct StackElement {
+    struct StackElement *_next;
     int val;
-} stackElement;
+} StackElement;
 
-typedef struct stack {
-    struct stackElement *top;
-} stack;
+typedef struct {
+    StackElement *top;
+} Stack;
 
 
-stack stack_create();
-void stack_push(stack *c, int val);
-int stack_size(stack *c);
-int stack_pop(stack *c);
-int stack_dup(stack *c);
-int stack_empty(stack *c);
+Stack stack_create();
+void stack_push(Stack*,int);
+int stack_size(Stack*);
+int stack_pop(Stack*);
+int stack_dup(Stack*);
+int stack_empty(Stack*);
 
 #endif

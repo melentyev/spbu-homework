@@ -1,28 +1,29 @@
 /**
- * Kirill Melentyev (c) 2013 
- * —тековый калькул€тор
- */
+Kirill Melentyev (c) 2013 
+стековый калькул€тор
+stack.c
+*/
 
 #include <memory.h>
 #include <stdlib.h>
 #include "stack.h"
 
-stack stack_create() {
-    stack c;
+Stack stack_create() {
+    Stack c;
     c.top = NULL;
     return c;
 }
 
-void stack_push(stack *c, int val) {
-    stackElement *el = (stackElement*)malloc(sizeof(stackElement));
+void stack_push(Stack *c, int val) {
+    StackElement *el = (StackElement*)malloc(sizeof(StackElement));
     el->val = val;
     el->_next = c->top;
     c->top = el;
 }
 
-int stack_size(stack *c) {
+int stack_size(Stack *c) {
     int res = 0;
-    stackElement *ptr = c->top;
+    StackElement *ptr = c->top;
     while(ptr != NULL) {
         ptr = ptr->_next;
         res++;
@@ -30,18 +31,18 @@ int stack_size(stack *c) {
     return res;
 }
 
-int stack_pop(stack *c) {
-    stackElement *ptr = c->top;
+int stack_pop(Stack *c) {
+    StackElement *ptr = c->top;
     int val = c->top->val;
     c->top = c->top->_next;
     free(ptr);
     return val;
 }
 
-int stack_empty(stack *c) {
+int stack_empty(Stack *c) {
     return (c->top == NULL);
 }
 
-int stack_dup(stack *c) {
+int stack_dup(Stack *c) {
     return (!stack_empty(c) ? stack_push(c, c->top->val), 1 : 0);
 }

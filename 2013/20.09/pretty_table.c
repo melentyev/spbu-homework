@@ -70,3 +70,62 @@ int main(int argc, char **argv) {
     outputTable(n, m, cellsize);
     return 0;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+char s[MAXN], pref[MAXN];
+int start, token;
+gets(s);
+n = strlen(s);
+s[n] = 0;
+s[n] = ' ';
+gets(pref);   
+start = 0;
+for(int i = 0; i < n; i++) {
+    if(s[i] == пробел || s[i] == ',') {
+        s[i] = 0;
+        if(i - start > 0) {
+            printf("%s%s\n", pref, s + start);
+        }
+        start = i + 1;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+

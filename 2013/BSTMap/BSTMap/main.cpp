@@ -1,6 +1,6 @@
 #include <cstring>
 #include <windows.h>
-#include "HashMap.h"
+#include "BSTMap.h"
 #include <iostream>
 #include <fstream>
 #include <cctype>
@@ -66,11 +66,11 @@ char toLower(char c) {
     }
     return c;
 }
-
+/*
 void run() {
     ifstream fin("book1.txt", ios_base::in | ios_base::binary);
     char c;
-    HashMap<char*, int, StrHash, StrComp> hm;
+    BSTMap<char*, int, StrComp> hm;
     char *word = new char[100], wordlen = 0, *newWord;
     fin.read(&c, 1);
     do {
@@ -106,11 +106,11 @@ void run() {
     }
     system("pause");
 }
-
+*/
 void runString() {
     ifstream fin("book1.txt", ios_base::in | ios_base::binary);
     char c;
-    HashMap<string, int, StringHash> hm;
+    BSTMap<string, int> hm;
     string word;
     word = "";
     fin.read(&c, 1);
@@ -124,7 +124,7 @@ void runString() {
         }
         fin.read(&c, 1);
     }
-    while(!fin.eof() );
+    while(!fin.eof()  );
     int cnt = 0;
     std::pair<int, string> *ar = new std::pair<int, string>[hm.size()];
     hm.iter([&ar, &cnt](const string &k, int v) 
@@ -141,7 +141,6 @@ void runString() {
     for(int i = cnt - 1; i >= cnt - 10; i--) {
         cout <<  ar[i].first << " - " << ar[i].second << endl;
     }
-    cout << hm._max_list_len << endl;
     system("pause");
 
 }

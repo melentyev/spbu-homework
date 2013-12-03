@@ -113,42 +113,52 @@ int bubble_sort(int *a, int n) {
     return 0;
 }
 
-void rand_array(int *a, int n, int l,  int r) {
+void rand_array(int *a, int n, int l,  int r) 
+{
     int *end = a + n;
-    while(a != end) {
+    while (a != end) 
+    {
         *(a++) = my_rand() % (r - l + 1)  + l;
     }
 }
 
-void sorted_array(int *a, int n, int l, int r) {
+void sorted_array(int *a, int n, int l, int r) 
+{
     rand_array(a, n, l, r);
     quick_sort_bubble(a, n);
 }
 
-void almost_sorted_array(int *a, int n, int l, int r) {
+void almost_sorted_array(int *a, int n, int l, int r) 
+{
     int i;
     sorted_array(a, n, l, r);
-    for(i = 0; i < 2 * (double)log(n); i++) {
+    for (i = 0; i < 2 * (double)log(n); i++) 
+    {
         swap(a + (my_rand() % n), a + (my_rand() % n));
     }
     
 }
 
-void print_array(int *a, int n) {
+void print_array(int *a, int n) 
+{
     int i, *end = a + n;
     printf("array(cnt: %d, sorted: %c):", n, (is_sorted(a, n) ? 'Y' : 'N') );
-    while(a != end) {
+    while(a != end) 
+    {
         printf(" %d", *(a++) ); 
     }
     printf("\n");
 }
 
-int is_sorted(int *a, int n) {
+int is_sorted(int *a, int n) 
+{
     int *last = a + n - 1;
     int stillSorted = true;
     a++;
-    while(a < last) {
-        if ( *a > *(a + 1) ) {               
+    while(a < last) 
+    {
+        if ( *a > *(a + 1) ) 
+        {               
             stillSorted = false;
             break;
         }
@@ -158,10 +168,13 @@ int is_sorted(int *a, int n) {
 }
 
 
-int _quick_sort(int *a, int n, int small_part, pfunc fn) {    
-    while(n > 1) {
+int _quick_sort(int *a, int n, int small_part, pfunc fn) 
+{    
+    while(n > 1) 
+    {
         int *l, *r, x, n1, n2, *a1, *a2;
-        if(n < small_part && fn != NULL) {
+        if(n < small_part && fn != NULL) 
+        {
             fn(a, n);
             return 0;       
         }       
@@ -169,7 +182,8 @@ int _quick_sort(int *a, int n, int small_part, pfunc fn) {
         r = a + n - 1;
         x = a[my_rand() % n];
         //printf("%d\n", x);
-        do {
+        do 
+        {
             while((*l) < x) l++;
             while((*r) > x) r--;
             if(l <= r) {
@@ -185,12 +199,14 @@ int _quick_sort(int *a, int n, int small_part, pfunc fn) {
         n2 = a + n - l;
         
         //Рекурсивно спускаемся только в меньшую ветвь - так стек не превысит log(n)
-        if(n1 > n2) {
+        if(n1 > n2) 
+        {
             _quick_sort(a2, n2, small_part, fn);
             a = a1;
             n = n1;
         }
-        else {
+        else 
+        {
             _quick_sort(a1, n1, small_part, fn);
             a = a2;
             n = n2;
@@ -199,17 +215,20 @@ int _quick_sort(int *a, int n, int small_part, pfunc fn) {
     return 0;
 }
 
-int quick_sort(int *a, int n) {
+int quick_sort(int *a, int n) 
+{
     _quick_sort(a, n, 0, NULL);
 }
                        
-int quick_sort_bubble(int *a, int n) {
+int quick_sort_bubble(int *a, int n) 
+{
     _quick_sort(a, n, 8, bubble_sort);
 }
 
 
 // Чтобы удобно было
-int test_sort(int *a, int n, int(*fn)(int*, int), int show_res, int times) {
+int test_sort(int *a, int n, int(*fn)(int*, int), int show_res, int times) 
+{
     int *buf, start, finish, sorted, step;
     buf = (int*)malloc(n * sizeof(int) );
     
@@ -227,7 +246,8 @@ int test_sort(int *a, int n, int(*fn)(int*, int), int show_res, int times) {
           
     sorted = is_sorted(buf, n);
     free(buf);
-    if (!sorted) {
+    if (!sorted) 
+    {
         return -1;
     }
     else {
@@ -235,7 +255,8 @@ int test_sort(int *a, int n, int(*fn)(int*, int), int show_res, int times) {
     }
 }
 
-void _test_array_type(pfunc functions[], char **sort_names, int sort_num, int smalltimes, int *small, int *medium, int *big, char *suff) {
+void _test_array_type(pfunc functions[], char **sort_names, int sort_num, int smalltimes, int *small, int *medium, int *big, char *suff) 
+{
     int res1, res2, res3;
 
     res1 = test_sort(small, SMALL, functions[sort_num], false, smalltimes);
@@ -244,16 +265,19 @@ void _test_array_type(pfunc functions[], char **sort_names, int sort_num, int sm
     printf("\n  small_%s: %.7lf\n", suff, (double)res1 / ((double)smalltimes) / 1000.0);
     printf("  medium_%s: %.7lf\n", suff, (double)res2 / 1000.0);
 
-    if(sort_num == 0 && strcmp(suff, "rand") == 0) {
+    if(sort_num == 0 && strcmp(suff, "rand") == 0) 
+    {
         printf("  big_%s: not runnig this sort algo on this data\n\n");
     }
-    else {
+    else 
+    {
         res3 = test_sort(big, BIG, functions[sort_num], false, 1);    
         printf("  big_%s: %.7lf\n\n", suff, (double)res3 / 1000.0);
     }
 }
 
-void run_testing(int sorts_cnt, pfunc functions[], char **sort_names, int smalltimes) {
+void run_testing(int sorts_cnt, pfunc functions[], char **sort_names, int smalltimes) 
+{
     int n,
         res_rand1 = 0, res_rand2 = 0, res_rand3 = 0, 
         res_almost1 = 0, res_almost2 = 0, res_almost3 = 0, 
@@ -283,7 +307,8 @@ void run_testing(int sorts_cnt, pfunc functions[], char **sort_names, int smallt
     sorted_array(medium_sorted, MEDIUM, 0, MEDIUM * 3);
     sorted_array(big_sorted, BIG, 0, BIG * 3);
    
-    for (sort_num = 0; sort_num < 4; sort_num++) {        
+    for (sort_num = 0; sort_num < 4; sort_num++) 
+    {        
         printf("Sort: %s\n  Times:\n", sort_names[sort_num]);
         _test_array_type(functions, sort_names, sort_num, smalltimes, small_rand, medium_rand, big_rand, "rand");
         _test_array_type(functions, sort_names, sort_num, smalltimes, small_almost_rand, medium_almost_rand, big_almost_rand, "almost_rand");
@@ -302,7 +327,8 @@ void run_testing(int sorts_cnt, pfunc functions[], char **sort_names, int smallt
     free(big_sorted);
 }
 
-int main() {            
+int main() 
+{            
     srand(117);
     //int a[] = {4, 1, 2, 10, 3, 7, 8, 6, 9, 5};
     pfunc functions[] = {bubble_sort, heap_sort, quick_sort, quick_sort_bubble};

@@ -6,14 +6,6 @@ namespace MyHelpers {
     class StringComp;
     class StrComp;
 
-    template <class T>
-    class AddressHash {
-        static const unsigned int _mult = 3373, _mod = (int)1e9 + 7;
-    public:
-        unsigned int operator()(const T &v) {
-            return (unsigned int) &v;
-        }
-    };
 
     /**
      *
@@ -62,21 +54,6 @@ namespace MyHelpers {
             long long power = 1;
             for (; *s; s++) {
                 sum = (sum + (*s) * power) % _mod;
-                power = (power * _mult) % _mod;
-            }
-            return (unsigned int)sum;
-        }
-    };
-
-    class StringHash {
-        static const unsigned int _mult = 3373, _mod = (int)1e9 + 7;
-    public:
-        unsigned int operator()(const String &s) {
-            long long sum = 0;
-            long long power = 1;
-            char *ptr = s.s;
-            for (; *ptr; ptr++) {
-                sum = (sum + (*ptr) * power) % _mod;
                 power = (power * _mult) % _mod;
             }
             return (unsigned int)sum;

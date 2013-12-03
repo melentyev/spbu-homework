@@ -19,37 +19,42 @@ void print_float(int x) {
     char m[24], firstbit = '0';
     unsigned int uex = 0;
     signed char cex;
-    char sign, shift[] = "                              ";
-
+    int sign;
     m[23] = 0;
+    
+    sign = ( ( unsigned int) x >> 31);
+    uex = ( ( (unsigned int) x >> 23) & ( (1 << 8) - 1) );
     for (i = 0; i < 32; i++) {
         if(i < 23) {        
             m[mi] = (current & 1);
             msum += m[mi];
             m[mi--] += '0';
         }
-        else if(i < 31) {
-            uex >>= 1;
-            uex |= (current & 1) * (1 << 7);
-        }
-        else {
-            sign = (current & 1) ? '-' : '+';
-        }
         current >>= 1;
     }
-    if(uex == 0) {
-        if(msum == 0) {
-            printf("%c0\n", sign);
+    for (i = 22; i > 0; i--) {
+        if (m[i] == '0') {
+            m[i] = 0;
         }
         else {
-            printf("%s-126\n", shift);
-            printf("%c%c.%s * 2\n", sign, firstbit, m);
+            break;
+        }
+    }             
+    if(uex == 0) {
+        if(msum == 0) {
+            printf("    %d\n", sign);
+            printf("(-1) * 0\n");
+        }
+        else {
+            printf("    %d    -126\n", sign);
+            printf("(-1) * 2 * %c.%s\n", firstbit, m);
         }
     }
     else {
         if(uex == 255) {
             if(msum == 0) {
-                printf("%cINF\n", sign);  
+                printf("    %d\n", sign);
+                printf("(-1) * INF\n");  
             }
             else {
                 printf("NaN\n");
@@ -58,12 +63,37 @@ void print_float(int x) {
         else {
             firstbit = '1';
             cex = (*( (char*)&uex) ) - 127;
-            printf("%s%d\n", shift, cex);
-            printf("%c%c.%s * 2\n", sign, firstbit, m);
+            printf("    %d   %d\n", sign, cex);
+            printf("(-1) * 2    * %c.%s\n", firstbit, m);
         }
     }
+}                                      
+
+int main() {
+    float inputVal;
+    float f = 2.0f;
+    
+    f = 1e100;
+    print_float(*((int*)&f));
+
+    f = -1e100;
+    print_float(*((int*)&f)); 
+    
+    f = 2.0f;
+    f -= 2.0f;
+    f = 0.0f / f;
+    print_float(*((int*)&f));
+
+    printf("Enter float number: \n");
+    scanf("%f", &inputVal);
+
+    print_float(*((int*)&inputVal) );
+    system("pause");
+    return 0;
 }
 
+
+/*
 void print_bits(int *x, int size) {    
     int i, j, current; 
     printf("%.5f\n", *((float*)x));
@@ -131,28 +161,4 @@ void tests() {
     print_bits((byte*)&mfval20, sizeof(float));
     
 }
-
-
-int main() {
-    float inputVal;
-    float f = 2.0f;
-    
-    f = 1e100;
-    print_float(*((int*)&f));
-
-    f = -1e100;
-    print_float(*((int*)&f)); 
-    
-    f = 2.0f;
-    f -= 2.0f;
-    f = 0.0f / f;
-    print_float(*((int*)&f));
-
-    printf("Enter float number: \n");
-    scanf("%f", &inputVal);
-
-    print_float(*((int*)&inputVal) );
-    system("pause");
-    return 0;
-}
-    
+*/    

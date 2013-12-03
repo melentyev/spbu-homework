@@ -19,6 +19,7 @@ int run() {
     int done = FALSE;
     Stack s = stack_create();
     char cmd[20];
+    printf("Commands: 'exit', 'pop', 'dup',  '+', '-', '*', '/'\n");
     do {
         fgets(cmd, 20, in);
         if(strlen(cmd) == 1) continue;
@@ -67,7 +68,7 @@ int run() {
                 }
                 break;
             }
-            printf("Operation result: %d\n", s.top->val);
+            printf("Operation result: %d (on top of stack)\n", s.top->val);
         }
         else if(sscanf(cmd, "%d", &a) > 0) {
             stack_push(&s, a);

@@ -15,14 +15,6 @@ int _strcmp_wrap(const void *a, const void *b) {
     return strcmp( *((char**)a), *((char**)b));
 }
 
-char* append_char(char *s, char c, int len) {
-    if (len % DEFAULT_CHUNK_SIZE == 0) {
-        s = (char*)realloc(s, len + DEFAULT_CHUNK_SIZE);
-    }
-    s[len++] = c;
-    return s;
-}
-
 void run(FILE *stream) {
     int c, cnt = 0, i;
     char **s = (char**)malloc(sizeof(char*));

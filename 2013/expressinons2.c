@@ -13,7 +13,6 @@
 //#define DEBUG_1
 #define MAX_LEN 1000
 
-char *global_expression, *global_position_pointer = 0, *global_position_previous = 0, *global_position_next;
 typedef enum tokenType {
     TT_NUMBER = 0,
     TT_PLUS = 1,
@@ -47,6 +46,9 @@ typedef struct __computationResult {
 result Factor();
 result Term();
 result Expression();
+
+char *global_expression, *global_position_pointer = 0, *global_position_previous = 0, *global_position_next;
+token _currentToken;
 
 result make_result(errorType error, int value) {
      result res;
@@ -89,7 +91,7 @@ void print_result(char *prefix, result r) {
     }
 }
 
-token get_token() {
+token next_token() {
     char* s = global_position_pointer;
     int parsing_number = 0;
     token res;
@@ -139,19 +141,17 @@ token get_token() {
     }
     if (res.type == TT_END) {
         s = 0;
-    }
-    global_position_next = s;
+    }                          
 #ifdef DEBUG_1
     printf("get_token: type=%d value=%d\n", res.type, res.value);
 #endif
+    _currentToken = res;
+    global_position_pointer = s;
     return res;
 }
 
-void next_token() {
-    if (global_position_pointer == global_position_next) {
-        get_token();
-    }
-    global_position_pointer = global_position_next;
+token get_token() { 
+    return _currentToken;
 }
 result Expr() {
     result lhs = Term(), rhs;
@@ -180,7 +180,6 @@ result Expr() {
             return make_result(ERR_UNEXPECTED_TOKEN, 0);
         }
     }
-    printf("Here: %d\n", op.type);
     if(op.type != TT_END && op.type != TT_BR_CLOSE) {
         return make_result(ERR_UNEXPECTED_TOKEN, (int) op.type);    
     }
@@ -272,6 +271,7 @@ int main() {
 
     global_expression = (char*)malloc(sizeof(char) * MAX_LEN);
     gets(global_expression);
+    next_token();
     print_result("Finaly: ", calculate());
     
     return 0;

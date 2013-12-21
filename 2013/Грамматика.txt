@@ -1,0 +1,24 @@
+Грамматика с присваиванием, степень, вызовом функций.
+number - число (числовая константа)
+id - символьный идентификатор
+Пример: "getArrayElement(arData, rand() % n) + 15^2 - 18^3"
+
+
+Expr -> 
+  | id = Expr
+  | Arithmetics
+Arithmetics ->  Term ( ('+' | '-') Term)*
+Term -> Factor ( ('*' | '/') Factor)*
+Factor ->
+  | '-' Powered
+  | Powered
+Powered -> 
+  | Single ^ Powered
+  | Single
+Single ->
+  | number
+  | id
+  | id '(' ')'
+  | id '(' Expr (',' Expr)* ')'
+  | '(' Expr ')'
+  

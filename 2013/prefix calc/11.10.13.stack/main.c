@@ -22,7 +22,7 @@ int run() {
     printf("Commands: 'exit', 'pop', 'dup',  '+', '-', '*', '/'\n");
     do {
         fgets(cmd, 20, in);
-        if(strlen(cmd) == 1) continue;
+        if (strlen(cmd) == 1) continue;
         cmd[strlen(cmd) - 1] = 0;
         if(strcmp(cmd, "exit") == 0) {
             done = TRUE;

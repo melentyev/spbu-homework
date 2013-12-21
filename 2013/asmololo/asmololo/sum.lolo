@@ -1,0 +1,20 @@
+; sum 1..N "mov r4 N"
+                 
+                mov r4 5
+                mov [0] r4
+                mov r1 1
+
+loopinit:       mov [r1] r1
+                add r1 1
+                sub r4 1
+                jg r4 loopinit 
+                ; loopinit finish
+                
+                mov r1 1
+				mov r4 [0]
+loopcalc:       add r2 [r1]
+                add r1 1
+                sub r4 1
+                jg r4 loopcalc 
+
+exit:           hlt r2

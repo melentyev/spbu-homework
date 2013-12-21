@@ -89,7 +89,7 @@ public:
         root = nullptr;
     }
     V& insert(const K &k, const V &v);
-    node* find(const K &k, unsigned int *calculatedHash = NULL) 
+    node* find(const K &k) 
     {
         node *p = root;
         while (p) 
@@ -115,7 +115,7 @@ public:
         {
             return;
         }
-       _iter (f, x->left);
+        _iter (f, x->left);
         f(x);
         _iter (f, x->right);
     }

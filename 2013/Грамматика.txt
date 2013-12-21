@@ -8,7 +8,7 @@ Expr ->
   | id '=' Expr
   | Arithmetics
 Arithmetics ->  Term ( ('+' | '-') Term)*
-Term -> Factor ( ('*' | '/') Factor)*
+Term -> Factor ( ('*' | '/' | '%') Factor)*
 Factor ->
   | '-' Powered
   | Powered

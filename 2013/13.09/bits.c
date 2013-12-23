@@ -13,58 +13,57 @@
 
 typedef int byte;
 
-void print_float(int x) {
-    double mval = 0.0, mpow = 1.0;
-    int i, mi = 22, msum = 0, current = x;
+void print_float(int x) 
+{
+    int i, mi = 22, mantIsNotNull = 0, current = x;
     char m[24], firstbit = '0';
     unsigned int uex = 0;
-    signed char cex;
     int sign;
     m[23] = 0;
     
     sign = ( ( unsigned int) x >> 31);
     uex = ( ( (unsigned int) x >> 23) & ( (1 << 8) - 1) );
-    for (i = 0; i < 32; i++) {
-        if(i < 23) {        
-            m[mi] = (current & 1);
-            msum += m[mi];
-            m[mi--] += '0';
-        }
-        current >>= 1;
+    for (i = 0; i < 23; i++, current >>= 1) 
+    {   
+        m[mi--] = (current & 1) + '0';
+        mantIsNotNull |= (current & 1);
     }
-    for (i = 22; i > 0; i--) {
-        if (m[i] == '0') {
-            m[i] = 0;
-        }
-        else {
-            break;
-        }
-    }             
-    if(uex == 0) {
-        if(msum == 0) {
+    i = 22;
+    while (i > 0 && m[i] == '0') 
+    {
+        m[i--] = 0;
+    }    
+    if(uex == 0) 
+    {
+        if(!mantIsNotNull) 
+        {
             printf("    %d\n", sign);
             printf("(-1) * 0\n");
         }
-        else {
+        else 
+        {
             printf("    %d    -126\n", sign);
-            printf("(-1) * 2 * %c.%s\n", firstbit, m);
+            printf("(-1) * 2 * 0.%s\n", m);
         }
     }
-    else {
-        if(uex == 255) {
-            if(msum == 0) {
+    else 
+    {
+        if(uex == 255) 
+        {
+            if(!mantIsNotNull) 
+            {
                 printf("    %d\n", sign);
                 printf("(-1) * INF\n");  
             }
-            else {
+            else 
+            {
                 printf("NaN\n");
             }
         }
-        else {
-            firstbit = '1';
-            cex = (*( (char*)&uex) ) - 127;
-            printf("    %d   %d\n", sign, cex);
-            printf("(-1) * 2    * %c.%s\n", firstbit, m);
+        else 
+        {     
+            printf("    %d   %d\n", sign, (int)uex - 127);
+            printf("(-1) * 2    * 1.%s\n", m);
         }
     }
 }                                      
@@ -73,15 +72,19 @@ int main() {
     float inputVal;
     float f = 2.0f;
     
-    f = 1e100;
+    f = 1e100f;
+    printf("1e100:\n");
     print_float(*((int*)&f));
 
-    f = -1e100;
+    f = -1e100f;
+    printf("-1e100:\n");
     print_float(*((int*)&f)); 
     
     f = 2.0f;
     f -= 2.0f;
     f = 0.0f / f;
+
+    printf(" 0.0f / (2.0f - 2.0f):\n");
     print_float(*((int*)&f));
 
     printf("Enter float number: \n");

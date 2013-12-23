@@ -5,15 +5,15 @@ id - символьный идентификатор
 
 
 Expr -> 
-  | id = Expr
+  | id '=' Expr
   | Arithmetics
 Arithmetics ->  Term ( ('+' | '-') Term)*
-Term -> Factor ( ('*' | '/') Factor)*
+Term -> Factor ( ('*' | '/' | '%') Factor)*
 Factor ->
   | '-' Powered
   | Powered
 Powered -> 
-  | Single ^ Powered
+  | Single '^' Powered
   | Single
 Single ->
   | number

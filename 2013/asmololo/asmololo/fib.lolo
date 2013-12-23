@@ -1,23 +1,23 @@
 ; to caculate N-th fib number: "mov r4 N"
                  
-				mov r4 20
+                mov r4 20
 				
-				mov r1 r4
-				sub r1 1
+                mov r1 r4
+                sub r1 1
                 jng r1 small
                 jmp big
 
-small:			mov r2 1
+small:          mov r2 1
                 jmp exit
                 
 big:            sub r4 1
                 mov r1 1
                 mov r2 2
-loop:	sub r4 1
+loop:           sub r4 1
                 je r4 exit
                 mov r3 r2
                 add r2 r1
                 mov r1 r3
                 jmp loop
 
-exit:	hlt r2
+exit:           hlt r2

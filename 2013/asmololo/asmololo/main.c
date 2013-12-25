@@ -1,3 +1,8 @@
+/**
+Kirill Melentyev (c) 2013 
+interpreter
+*/
+
 #include <stdlib.h>
 #include "common.h"
 

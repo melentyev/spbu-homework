@@ -33,6 +33,7 @@
         genSqr 25
         |> printfn "genSqr 25: %A"
         printfn ""
+
 module HW2 = 
     open System
     let biggestDelimiter n = 
@@ -51,16 +52,46 @@ module HW2 =
     let sumfibs n = 
         Seq.concat [Seq.singleton 1; Seq.unfold (fun (x, y) -> Some(x + y, (y, x + y) ) ) (0, 1) ]
         |> Seq.takeWhile ((>=)n)
-        |> Seq.sum
-        
+        |> Seq.sum 
+    
     let factorialDigitsSum n = 
         let chars (s:string) = s.ToCharArray() 
-        seq { 1I .. n } 
+        let sq = seq { 1I .. n } 
+        sq
         |> Seq.fold (*) 1I
         |> string
         |> chars
         |> Array.map (fun c -> Int32.Parse <| string c)
-        |> Array.sum
+        |> Array.sum 
+    
+    type Expr = 
+        | Const of int
+        | Var of string
+        | Add of Expr * Expr
+        | Sub of Expr * Expr
+        | Mul of Expr * Expr
+        | Div of Expr * Expr
+    
+    let rec arithm expression =
+        let cmp e1 e2 = 
+            match e2 with 
+            | e1 -> true 
+            | _ -> false
+        let binaryOp x y op expr = 
+            let lhs, rhs = arithm x, arithm y
+            match lhs, rhs with
+            | Const a, Const b -> Const(op a b)
+            | Var x, Const 0 | Const 0, Var x when cmp expr Add -> Var x 
+            | Var x, Const 0 when cmp expr Sub -> Var x
+            | Var x, Const 1 | Const 1, Var x when cmp expr Mul -> Var x
+            | Var x, Const 1 when cmp expr Div -> Var x
+            | _ -> expr(lhs, rhs)
+        match expression with
+        | Add(x, y) -> binaryOp x y (+) Add
+        | Sub(x, y) -> binaryOp x y (-) Sub
+        | Mul(x, y) -> binaryOp x y (*) Mul 
+        | Div(x, y) -> binaryOp x y (/) Div
+        | x -> x
 
 
     type Geom = 
@@ -94,6 +125,7 @@ module HW2 =
         match g with
         | Intersect (a, b) -> intersect' a b
         | x -> x
+
     let tests() = 
         printfn "HW2.tests()" 
         biggestDelimiter 600851475143L
@@ -102,8 +134,18 @@ module HW2 =
         |> printfn "sumfibs 4000000: %A" 
         factorialDigitsSum 100I
         |> printfn "factorialDigitsSum 100: %A" 
+        arithm <| Add (Add(Const 1, Const 2), Add (Var "a", Const 0))
+        |> printfn "arithm <| Add (Add(Const 1, Const 2), Add (Var \"a\", Const 0)): %A" 
         printfn ""
 
+module HW3 = 
+   
+    let rec map' f l k = 
+        match l with
+        | [] -> k []
+        | hd :: tl -> map' f tl (fun mtl -> f hd :: mtl |> k)
+
+    map' ( (+) 1) [1; 2; 3; 4; 5; 6] (printfn "%A")
 
 [<EntryPoint>]
 let main argv = 

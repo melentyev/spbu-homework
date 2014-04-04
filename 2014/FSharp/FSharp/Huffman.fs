@@ -69,7 +69,7 @@ module Test =
     [<Test>]
     let ``big test``() = 
         let src = 
-            (String.replicate 10000 
+            (String.replicate 1000
                 "abcdehhhhhadhhhhhsdhhhhhhuuuhhhhhhhh").ToCharArray()
             |> Array.toList
         let t = createCodeTree src

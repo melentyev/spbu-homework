@@ -180,6 +180,7 @@ Desktop.ini
 $RECYCLE.BIN/
 
 *.exe
+*.dll
 
 # Mac crap
 .DS_Store

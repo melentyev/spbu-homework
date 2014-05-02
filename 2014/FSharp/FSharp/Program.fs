@@ -262,7 +262,7 @@ module HW4 =
             let k = invoke fname
             ()
         form.Controls.AddRange [| wb; btnSend; tb |]
-        form.Activated.Add <| fun _ -> 
+        (*form.Activated.Add <| fun _ -> 
             if not !firstTime then () else 
                 firstTime := false      
                 
@@ -285,7 +285,7 @@ module HW4 =
                 printfn "here"
                 wb.Navigate(urlStart) 
         Application.Run(form)
-        ()
+        ()*)
 
     let tests() = 
         [ "http://google.ru/"
@@ -294,7 +294,6 @@ module HW4 =
           ]
           |> imgTags
         printfn ""
-    
 
 [<EntryPoint>]
 [<System.STAThread>]

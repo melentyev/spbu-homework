@@ -10,12 +10,12 @@ module TreeMap =
         | Fork of TreeNode<'K, 'V> * TreeNode<'K, 'V> * 'K * 'V * int
         | Empty
 
-    let private isEmpty = function Empty -> true | _ -> false
+    let private isEmpty = function Empty -> true | _ -> false  
 
     let private left =  function 
         | Empty -> failwith "empty" 
         | Fork(x, _, _, _, _) -> x
-
+         
     let private right =  function 
         | Empty -> failwith "empty" 
         | Fork(_, x, _, _, _) -> x

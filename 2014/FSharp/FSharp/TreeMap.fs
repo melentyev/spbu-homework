@@ -111,12 +111,10 @@ module TreeMap =
         val private t : TreeNode<'K, 'V>                   // понадобились потому что хотелось сделать тип TreeNode
         private new (t') = { t = t' }                      // закрытым в модуле, и соответственно закрытый конструктор
         new (?data) = {                                    // от TreeNode
-            t = match data with 
-                | None -> TreeNode<'K,'V>.Empty
-                | Some(sq) ->
-                    if Seq.isEmpty sq then TreeNode<'K,'V>.Empty
-                    else Seq.distinctBy fst sq 
-                                            |> Seq.fold (fun m (k, v) -> add' k v m) Empty 
+            t = 
+                let data = defaultArg data Seq.empty<'K * 'V>
+                if Seq.isEmpty data then Empty
+                else data |> Seq.distinctBy fst |> Seq.fold (fun m (k, v) -> add' k v m) Empty 
         }
         
         member private x.getEnumerator() = 
@@ -175,6 +173,7 @@ module MyTest =
     
     let rnd = new System.Random()
     let a = new TreeMap<_, _> (Seq.init 100 (fun _ -> (rnd.Next(1, 200), "aba") ))
+    let b = new TreeMap<_, _> (Seq.init 100 (fun _ -> (rnd.Next(1, 200), 2.455) ))
     printfn "%A" <| Seq.toList a
     printfn "%A" <|  ((new TreeMap<_, _> ( [ (1, 2); (1, 3) ] )).Remove(1))
 

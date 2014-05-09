@@ -1,12 +1,13 @@
 ﻿namespace TreeMap
 
+
 module TreeMap = 
 
     open System
     open System.Collections.Generic
     open System.Collections
 
-    type TreeNode<'K, 'V> = 
+    type private TreeNode<'K, 'V> = 
         | Fork of TreeNode<'K, 'V> * TreeNode<'K, 'V> * 'K * 'V * int
         | Empty
 
@@ -106,12 +107,23 @@ module TreeMap =
                         fork l (remove' (key v') r) (key v') (value v')
                     |> balance
 
-    type TreeMap<'K, 'V  when 'K : comparison > (t: TreeNode<'K, 'V>) = 
-        let getEnumerator() = 
+    type TreeMap<'K, 'V  when 'K : comparison > = class    // explicit class declaration и explicit конструкторы  
+        val private t : TreeNode<'K, 'V>                   // понадобились потому что хотелось сделать тип TreeNode
+        private new (t') = { t = t' }                      // закрытым в модуле, и соответственно закрытый конструктор
+        new (?data) = {                                    // от TreeNode
+            t = match data with 
+                | None -> TreeNode<'K,'V>.Empty
+                | Some(sq) ->
+                    if Seq.isEmpty sq then TreeNode<'K,'V>.Empty
+                    else Seq.distinctBy fst sq 
+                                            |> Seq.fold (fun m (k, v) -> add' k v m) Empty 
+        }
+        
+        member private x.getEnumerator() = 
             let rec traverse = function 
                 | Empty -> [] 
                 | Fork(l, r, _, _, _) as f -> traverse l @ [f] @ traverse r
-            let fullpath = Empty :: traverse t
+            let fullpath = Empty :: traverse x.t
             let path = ref fullpath
             let reset() = path := fullpath
             let current() = 
@@ -131,44 +143,39 @@ module TreeMap =
                 member e.Dispose() = () 
                 }
 
-        new (?data) = 
-            match data with 
-            | None -> new TreeMap<'K,'V> (TreeNode<'K,'V>.Empty)
-            | Some(sq) ->
-                if Seq.isEmpty sq then TreeMap<'K,'V> (TreeNode<'K,'V>.Empty)
-                else new TreeMap<'K,'V> (Seq.distinctBy fst sq 
-                                        |> Seq.fold (fun m (k, v) -> add' k v m) Empty )
-
         member x.Add(k, v) = 
             let v = 
-                match (find' k t) with 
-                | Empty -> t
-                | _ -> (remove' k t)
+                match (find' k x.t) with 
+                | Empty -> x.t
+                | _ -> (remove' k x.t)
                 |> add' k v
             new TreeMap<_,_>(v)
 
-        member x.Remove k = new TreeMap<_,_>(remove' k t)
-        member x.TryFind k = match find' k t with Empty -> None | t -> Some(value t)
+        member x.Remove k = new TreeMap<_,_>(remove' k x.t)
+        member x.TryFind k = match find' k x.t with Empty -> None | t -> Some(value t)
         member x.ContainsKey k = 
             match x.TryFind k with
             | Some(_) -> true
             | _ -> false
-        member x.Count = count' t
-        member x.IsEmpty = match t with Empty -> true | _ -> false
+        member x.Count = count' x.t
+        member x.IsEmpty = match x.t with Empty -> true | _ -> false
         member x.Item k = 
             match x.TryFind(k) with
             | Some(v) -> v
             | _ -> raise(new KeyNotFoundException())
         override x.ToString() = "TreeMap: " + Seq.fold (fun acc y -> acc + y.ToString()) "" x
         interface IEnumerable<'K*'V> with
-            member x.GetEnumerator() = getEnumerator()
+            member x.GetEnumerator() = x.getEnumerator()
         interface IEnumerable with
-             member x.GetEnumerator() = getEnumerator() :> IEnumerator
-    
+             member x.GetEnumerator() = x.getEnumerator() :> IEnumerator
+    end
 
+module MyTest = 
+    open TreeMap
+    
     let rnd = new System.Random()
     let a = new TreeMap<_, _> (Seq.init 100 (fun _ -> (rnd.Next(1, 200), "aba") ))
     printfn "%A" <| Seq.toList a
-    printfn "%A" <| Seq.toList (new TreeMap<_, _> ( [ (1, 2); (1, 3) ] ))
+    printfn "%A" <|  ((new TreeMap<_, _> ( [ (1, 2); (1, 3) ] )).Remove(1))
 
     System.Console.ReadKey() |> ignore

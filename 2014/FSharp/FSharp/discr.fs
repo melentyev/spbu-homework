@@ -171,4 +171,24 @@ act m4
 let test = new Map<int,int> ([])
 
 
-kuhn [[1; 2; 3; 4; 5; 6; 7]; [1; 2]; [1]; [0; 1; 2]; [3]; [0]; [0]; [0]]
+//kuhn [[1; 2; 3; 4; 5; 6; 7]; [1; 2]; [1]; [0; 1; 2]; [3]; [0]; [0]; [0]]
+
+let rec gcd a b = 
+    if a = 0I then b else gcd <| b % a <| a
+
+let inp = "1.(3)"
+let tr (s:string) = 
+    let (l, r) = 
+        let a = s.Split [| '.' |] in (a.[0], a.[1])
+    let (r1, r2) = 
+        let a = r.Split [| '(' |] in (a.[0], a.[1].Trim [| ')' |] )
+    let N1 = (l + r1, r2)
+    let N2 = (l + r1 + r2, r2)
+    let a1, b1 = ((bigint.Parse(fst N2) - bigint.Parse(fst N1) ),(10I ** (r1.Length + r2.Length) - 10I ** r1.Length) )
+    let g = gcd a1 b1
+    let A, B = a1 / g, b1 / g
+    A.ToString() + " / " + B.ToString() 
+
+tr inp
+
+    

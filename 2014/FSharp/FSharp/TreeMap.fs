@@ -1,8 +1,6 @@
 ﻿namespace TreeMap
 
-
 module TreeMap = 
-
     open System
     open System.Collections.Generic
     open System.Collections
@@ -82,8 +80,7 @@ module TreeMap =
         | Fork(_, x, _, _, _) as t -> if isEmpty x then t else mostRight x
         | Empty -> failwith "struct error"
 
-    let rec private find' k t = 
-            match t with
+    let rec private find' k = function
             | Empty -> Empty
             | Fork(l, r, k1, _, _) as f when k = k1 -> f
             | Fork(l, r, k1, _, _) when k < k1 -> find' k l
@@ -151,17 +148,11 @@ module TreeMap =
 
         member x.Remove k = new TreeMap<_,_>(remove' k x.t)
         member x.TryFind k = match find' k x.t with Empty -> None | t -> Some(value t)
-        member x.ContainsKey k = 
-            match x.TryFind k with
-            | Some(_) -> true
-            | _ -> false
+        member x.ContainsKey = Option.isSome << x.TryFind
         member x.Count = count' x.t
-        member x.IsEmpty = match x.t with Empty -> true | _ -> false
-        member x.Item k = 
-            match x.TryFind(k) with
-            | Some(v) -> v
-            | _ -> raise(new KeyNotFoundException())
-        override x.ToString() = "TreeMap: " + Seq.fold (fun acc y -> acc + y.ToString()) "" x
+        member x.IsEmpty = isEmpty x.t
+        member x.Item = Option.get << x.TryFind
+        override x.ToString() = "TreeMap: " + Seq.fold (fun acc y -> acc + "; " + y.ToString()) "" x
         interface IEnumerable<'K*'V> with
             member x.GetEnumerator() = x.getEnumerator()
         interface IEnumerable with

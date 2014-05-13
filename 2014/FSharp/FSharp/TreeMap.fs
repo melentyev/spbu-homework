@@ -1,6 +1,6 @@
 ﻿namespace TreeMap
 
-module TreeMap = 
+module Map = 
     open System
     open System.Collections.Generic
     open System.Collections
@@ -108,10 +108,10 @@ module TreeMap =
                         fork l (remove' (key v') r) (key v') (value v')
                     |> balance
 
-    type TreeMap<'K, 'V when 'K : comparison and 'V : equality > = class    // explicit class declaration и explicit конструкторы  
-        val private t : TreeNode<'K, 'V>                   // понадобились потому что хотелось сделать тип TreeNode
-        private new (t') = { t = t' }                      // закрытым в модуле, и соответственно закрытый конструктор
-        new (?data) = {                                    // от TreeNode
+    type Map<'K, 'V when 'K : comparison and 'V : equality > = class    // explicit class declaration и explicit конструкторы  
+        val private t : TreeNode<'K, 'V>                                // понадобились потому что хотелось сделать тип TreeNode
+        private new (t') = { t = t' }                                   // закрытым в модуле, и соответственно закрытый конструктор
+        new (?data) = {                                                 // от TreeNode
             t = 
                 let data = defaultArg data Seq.empty<'K * 'V>
                 if Seq.isEmpty data then Empty
@@ -121,7 +121,7 @@ module TreeMap =
         member private x.getEnumerator() = 
             let rec traverse = function 
                 | Empty -> [] 
-                | Fork(l, r, _, _, _) as f -> traverse l @ [f] @ traverse r
+                | Fork(l, r, _, _, _) as f -> traverse l @ f :: traverse r
             let fullpath = Empty :: traverse x.t
             let path = ref fullpath
             let reset() = path := fullpath
@@ -148,9 +148,9 @@ module TreeMap =
                 | Empty -> x.t
                 | _ -> (remove' k x.t)
                 |> add' k v
-            new TreeMap<_,_>(v)
+            new Map<_,_>(v)
 
-        member x.Remove k = new TreeMap<_,_>(remove' k x.t)
+        member x.Remove k = new Map<_,_>(remove' k x.t)
         member x.TryFind k = match find' k x.t with Empty -> None | t -> Some(value t)
         member x.ContainsKey = Option.isSome << x.TryFind
         member x.Count = count' x.t
@@ -159,7 +159,7 @@ module TreeMap =
         override x.ToString() = "TreeMap: " + Seq.fold (fun acc y -> acc + "; " + y.ToString()) "" x
         override x.Equals(o:obj) = 
             match o with 
-            | :? TreeMap<'K, 'V> as y -> x.Count = y.Count && Seq.forall2 (=) x y
+            | :? Map<'K, 'V> as y -> x.Count = y.Count && Seq.forall2 (=) x y
             | _ -> false
         interface IEnumerable<'K*'V> with
             member x.GetEnumerator() = x.getEnumerator()
@@ -168,12 +168,10 @@ module TreeMap =
     end
 
 module MyTest = 
-    open TreeMap
-    
     let rnd = new System.Random()
-    let a = new TreeMap<_, _> (Seq.init 100 (fun _ -> (rnd.Next(1, 200), "aba") ))
-    let b = new TreeMap<_, _> (Seq.init 100 (fun _ -> (rnd.Next(1, 200), 2.455) ))
+    let a = new Map.Map<_, _> (Seq.init 100 (fun _ -> (rnd.Next(1, 200), "aba") ))
+    let b = new Map.Map<_, _> (Seq.init 100 (fun _ -> (rnd.Next(1, 200), 2.455) ))
     printfn "%A" <| Seq.toList a
-    printfn "%A" <|  ((new TreeMap<_, _> ( [ (1, 2); (1, 3) ] )).Remove(1))
+    printfn "%A" <|  ((new Map<_, _> ( [ (1, 2); (1, 3) ] )).Remove(1))
 
     System.Console.ReadKey() |> ignore

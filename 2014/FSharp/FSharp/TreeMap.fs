@@ -31,6 +31,10 @@ module TreeMap =
         | Empty -> 0
         | Fork(_, _, _, _, x) -> x
 
+    let sum a b = a  + b
+    let inc x = sum 1 x
+    let inc' = sum 1
+
     let private upd l r = max (height l) (height r) + 1
 
     let private fork l r k v = Fork(l, r, k, v, upd l r)
@@ -104,7 +108,7 @@ module TreeMap =
                         fork l (remove' (key v') r) (key v') (value v')
                     |> balance
 
-    type TreeMap<'K, 'V  when 'K : comparison > = class    // explicit class declaration и explicit конструкторы  
+    type TreeMap<'K, 'V when 'K : comparison and 'V : equality > = class    // explicit class declaration и explicit конструкторы  
         val private t : TreeNode<'K, 'V>                   // понадобились потому что хотелось сделать тип TreeNode
         private new (t') = { t = t' }                      // закрытым в модуле, и соответственно закрытый конструктор
         new (?data) = {                                    // от TreeNode
@@ -153,6 +157,10 @@ module TreeMap =
         member x.IsEmpty = isEmpty x.t
         member x.Item = Option.get << x.TryFind
         override x.ToString() = "TreeMap: " + Seq.fold (fun acc y -> acc + "; " + y.ToString()) "" x
+        override x.Equals(o:obj) = 
+            match o with 
+            | :? TreeMap<'K, 'V> as y -> x.Count = y.Count && Seq.forall2 (=) x y
+            | _ -> false
         interface IEnumerable<'K*'V> with
             member x.GetEnumerator() = x.getEnumerator()
         interface IEnumerable with

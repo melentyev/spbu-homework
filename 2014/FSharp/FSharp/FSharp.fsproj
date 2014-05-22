@@ -55,9 +55,12 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <None Include="App.config" />
-    <Compile Include="TreeMap.fs" />
+    <Compile Include="ChatBot.fs" />
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="AIMLbot">
+      <HintPath>AIMLbot.dll</HintPath>
+    </Reference>
     <Reference Include="FSharp.Charting">
       <HintPath>..\packages\FSharp.Charting.0.90.6\lib\net40\FSharp.Charting.dll</HintPath>
       <Private>True</Private>
@@ -70,6 +73,7 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Numerics" />
+    <Reference Include="System.Windows.Forms" />
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

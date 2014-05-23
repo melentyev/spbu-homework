@@ -31,10 +31,6 @@ module Map =
         | Empty -> 0
         | Fork(_, _, _, _, x) -> x
 
-    let sum a b = a  + b
-    let inc x = sum 1 x
-    let inc' = sum 1
-
     let private upd l r = max (height l) (height r) + 1
 
     let private fork l r k v = Fork(l, r, k, v, upd l r)

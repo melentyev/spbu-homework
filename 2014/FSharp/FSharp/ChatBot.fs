@@ -15,8 +15,7 @@ let main argv =
     let preparedForm = 
         
         let form = new Form(Text = "Chat", FormBorderStyle = FormBorderStyle.FixedDialog, 
-                            Padding = new Padding(10), Width = 700, Height = 500 )
-
+                            Padding = new Padding(10), Width = 700, Height = 500, Icon = new Icon("icon.ico"))
         let history = new RichTextBox (Width = form.ClientSize.Width, ReadOnly = true, 
                                         Height = form.ClientSize.Height - 30, BackColor = Color.White)
 
@@ -34,12 +33,14 @@ let main argv =
         |> Event.map(fun e -> e :> EventArgs)
         |> Event.merge (sendBtn.Click)
         |> Event.add (fun _ -> 
-            input.Text <- ""
             history.AppendText ("[You]: " + input.Text + "\n")
             history.SelectionStart <- history.TextLength
             history.SelectionColor <- Color.Red
             history.AppendText ("[Bot]: " + request input.Text + "\n")
             history.SelectionColor <- history.ForeColor
+            history.Select(history.Text.Length, 0)
+            history.ScrollToCaret()
+            input.Text <- ""
         )
 
         (*

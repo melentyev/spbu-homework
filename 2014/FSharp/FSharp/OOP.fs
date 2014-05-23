@@ -56,11 +56,11 @@ type Keyboard(approx_quality, mapping: Map<int, char> ) =
         x.SimulateInput(KB_UP, key)
     member x.KbInputReceived = 
         base.InputReceived 
-        |> Event.map (fun ((t, c), _) -> 
-            if Map.containsKey c mapping then 
-                Choice1Of2 (mapping.[c])
+        |> Event.map (fun ((_, code), _) -> 
+            if Map.containsKey code mapping then 
+                Choice1Of2 (mapping.[code])
             else 
-                Choice2Of2 c)
+                Choice2Of2 code)
 
 type Mouse(approx_quality) =
     inherit InputDevice<MouseEventType * (int * int)>(approx_quality)

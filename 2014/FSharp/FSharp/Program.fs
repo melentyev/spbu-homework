@@ -179,14 +179,12 @@ module HW4 =
     open System.Collections.Generic
     open System.Threading
 
-    let getUrlSync url = 
-        use response = WebRequest.Create(new Uri(url) ).GetResponse()
-        use content = response.GetResponseStream()
-        use reader = new StreamReader(content)
-        reader.ReadToEnd()
     let getUrl url f = 
-        Async.Start <| async {
-            getUrlSync url |> f
+        Async.StartImmediate <| async {
+            use! response = WebRequest.Create(new Uri(url) ).AsyncGetResponse()
+            use content = response.GetResponseStream()
+            use reader = new StreamReader(content)
+            reader.ReadToEnd() |> f
         }
 
     

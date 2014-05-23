@@ -24,7 +24,7 @@ let (==) (g1: Geom) (g2: Geom) =
     | Point(x, y), Point(x', y') when x ?= x' && y ?= y' -> true
     | Line(a, b), Line(a', b') when a ?= a' && b ?= b' -> true
     | VerticalLine x, VerticalLine x' when x ?= x' -> true
-    | LineSegment (a, b), LineSegment(c, d) when a ?== c && b ?== d -> true
+    | LineSegment(a, b), LineSegment(c, d) when a ?== c && b ?== d || a ?== d && b ?== c -> true
     | _ -> false
     
 
@@ -45,10 +45,9 @@ let seqInt1d a b c d =
 let rectIntersect (x1, y1) (x2, y2) (x1', y1') (x2', y2') = 
     let (x1, y1), (x2, y2) = normalizeRect (x1, y1) (x2, y2)
     let (x1', y1'), (x2', y2') = normalizeRect (x1', y1') (x2', y2')
-
     seqInt1d x1 x2 x1' x2' >>= fun (x1, x2) -> 
     seqInt1d y1 y2 y1' y2' >>= fun (y1, y2) -> 
-    Some(x1, x2, y1, y2)
+    Some(x1, y1, x2, y2)
 
 let geom2line = function 
     | Line (a, b) -> (a, -1.0, b)

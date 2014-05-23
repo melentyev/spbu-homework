@@ -39,5 +39,9 @@ module Tests =
         let data = Intersect(LineSegment((-3.0, -3.0), (0.0, 0.0)), 
                              LineSegment((2.0, 2.0), (-1.0, -1.0) ) ) 
         test data expected
-
-let a = Tests.``2 segments reversed``()
+    [<Test>]
+    let ``3 lines``() = 
+        let expected = Point(-0.7142857142857142857142857, 4.285714285714285714285714)
+        let data =  Intersect(VerticalLine(-0.7142857142857142857142857), 
+                              Intersect(Line(1.0, 5.0), Line(3.8, 7.0) ))
+        test data expected

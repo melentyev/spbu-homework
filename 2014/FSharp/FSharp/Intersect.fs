@@ -1,6 +1,14 @@
 ﻿module Intersect
-
 open System
+
+
+let (>>=) m f = Option.bind f m
+
+let eps = 1e-9
+let (?=) (x:float) (y:float) = Math.Abs(x - y) < eps
+let (?==) (x:float*float) (y:float*float) = fst x ?= fst y && snd x ?= snd y
+
+type GenLine = float * float * float // Ax + By + C = 0
 
 type Geom = 
     | NoPoint
@@ -10,45 +18,85 @@ type Geom =
     | LineSegment of (float * float) * (float * float) // отрезок
     | Intersect of Geom * Geom // пересечение двух множеств 
 
-type GenLine = float * float * float // Ax + By + C = 0
+let (==) (g1: Geom) (g2: Geom) = 
+    match g1, g2 with 
+    | NoPoint, NoPoint -> true
+    | Point(x, y), Point(x', y') when x ?= x' && y ?= y' -> true
+    | Line(a, b), Line(a', b') when a ?= a' && b ?= b' -> true
+    | VerticalLine x, VerticalLine x' when x ?= x' -> true
+    | LineSegment (a, b), LineSegment(c, d) when a ?== c && b ?== d -> true
+    | _ -> false
+    
 
-let eps = 1e-9
-
-let (?=) (x:float) y = Math.Abs(x - y) < eps
-
-let line x y x' y' =  (y - y', x' - x, x * y' - x' * y)
+let line (x, y) (x', y') = (y - y', x' - x, x * y' - x' * y)
 
 let isOnLine (A, B, C) x y = A * x + B * y + C ?= 0.0
 
-let rec resolveIntersections g = 
-    
-    
-    let boundedBy (x1, y1, x2, y2) x y =
-        let x', y' = min x1 x2, min y1 y2
-        let x'', y'' = max x1 x2, max y1 y2 
-        x >= x' && x <= x'' && y >= y' && y <= y''
-    let geom2line = function 
-        | Line (a, b) -> (a, -1.0, b)
-        | VerticalLine (x) -> (1.0, 0.0, -x)
-    let linesIntersection a' b' = 
-        let (A, B, C) = geom2line a'
-        let (A', B', C') = geom2line b'
-        NoPoint
+let normalizeRect (x1, y1) (x2, y2) = (min x1 x2, min y1 y2), (max x1 x2, max y1 y2 )
+
+let insideRect (x1, y1, x2, y2) x y =
+    let (x', y'), (x'', y'') = normalizeRect (x1, y1) (x2, y2)
+    x >= x' && x <= x'' && y >= y' && y <= y''
+
+let seqInt1d a b c d = 
+    let x, y = max a c, min b d
+    if x > y then None else Some (x, y)
+
+let rectIntersect (x1, y1) (x2, y2) (x1', y1') (x2', y2') = 
+    let (x1, y1), (x2, y2) = normalizeRect (x1, y1) (x2, y2)
+    let (x1', y1'), (x2', y2') = normalizeRect (x1', y1') (x2', y2')
+
+    seqInt1d x1 x2 x1' x2' >>= fun (x1, x2) -> 
+    seqInt1d y1 y2 y1' y2' >>= fun (y1, y2) -> 
+    Some(x1, x2, y1, y2)
+
+let geom2line = function 
+    | Line (a, b) -> (a, -1.0, b)
+    | VerticalLine (x) -> (1.0, 0.0, -x)
+    | _ -> failwith "fail"
+
+let (| NoInt | IntInf | IntPoint |) ((A, B, C), (A', B', C')) = 
+    let det a b c d = a * d - b * c
+    let d = det A B A' B'
+    let dx = - (det C B C' B')
+    let dy = - (det A C A' C')
+    if d ?= 0.0 then 
+        if (dx ?= 0.0 && dy ?= 0.0) then IntInf
+        else NoInt
+    else IntPoint (dx / d, dy / d)
+
+let rec resolveIntersections g =  
     let intersect' a' b'  =
         let a = resolveIntersections a'
         let b = resolveIntersections b'
         match a, b with
         | NoPoint, _ | _, NoPoint -> NoPoint
-        | Point(x, y) as p, Point(x', y') -> if x = x' && y = y' then p else NoPoint
+        | Point(x, y) as p, Point(x', y') -> if (x, y) ?== (x', y') then p else NoPoint
         | (Point(x, y), v) | (v, Point(x, y) ) -> 
             match v with 
-            | VerticalLine x' -> if x = x' then Point(x, y) else NoPoint
-            | Line (a, b) -> if y = a * x + b then Point(x, y) else NoPoint
+            | VerticalLine _ | Line _ -> if isOnLine (geom2line v) x y then Point(x, y) else NoPoint
             | LineSegment ( (x', y'), (x'', y'' ) )  -> 
-                if isOnLine (line x' y' x'' y'' ) x y 
-                    && boundedBy (x', y', x'', y'') x y then Point(x, y) else NoPoint
+                if isOnLine (line (x', y') (x'', y'') ) x y 
+                    && insideRect (x', y', x'', y'') x y then Point(x, y) else NoPoint
             | _ -> failwith "_"
-        | l1, l2 -> linesIntersection l1 l2
+        | LineSegment ((x1, y1), (x2, y2)), LineSegment ((x1', y1'), (x2', y2')) -> 
+            match line (x1, y1) (x2, y2), line (x1', y1') (x2', y2') with
+            | IntInf -> 
+                match rectIntersect (x1, y1) (x2, y2) (x1', y1') (x2', y2') with
+                | Some (x1, y1, x2, y2) -> LineSegment ((x1, y1), (x2, y2))
+                | None -> NoPoint
+            | IntPoint (x, y) when insideRect (x1, y1, x2, y2) x y && insideRect (x1', y1', x2', y2') x y -> Point(x, y)
+            | _ -> NoPoint
+        | LineSegment ((x1, y1), (x2, y2)), v | v, LineSegment ((x1, y1), (x2, y2)) ->
+            match geom2line v, line (x1, y1) (x2, y2) with 
+            | IntInf -> LineSegment ((x1, y1), (x2, y2))
+            | IntPoint (x, y) when insideRect (x1, y1, x2, y2) x y ->  Point(x, y)
+            | _ -> NoPoint
+        | v1, v2 -> 
+            match geom2line v1, geom2line v2 with 
+            | IntInf -> v1 
+            | IntPoint (x, y) -> Point (x, y) 
+            | _ -> NoPoint
     match g with
     | Intersect (a, b) -> intersect' a b
     | x -> x

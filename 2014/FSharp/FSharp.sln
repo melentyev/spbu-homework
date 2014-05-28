@@ -5,6 +5,10 @@ VisualStudioVersion = 12.0.21005.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharp", "FSharp\FSharp.fsproj", "{9A40D839-793E-4D7C-8A1E-AF2561ACF068}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "IntersectTests", "IntersectTests\IntersectTests.fsproj", "{AECD483B-174D-477B-9E9A-895B42F14CB7}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Intersect", "Intersect\Intersect.fsproj", "{FE23360A-AB17-4514-B3AA-AB7E9EE0E7E2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{9A40D839-793E-4D7C-8A1E-AF2561ACF068}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9A40D839-793E-4D7C-8A1E-AF2561ACF068}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9A40D839-793E-4D7C-8A1E-AF2561ACF068}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECD483B-174D-477B-9E9A-895B42F14CB7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECD483B-174D-477B-9E9A-895B42F14CB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECD483B-174D-477B-9E9A-895B42F14CB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECD483B-174D-477B-9E9A-895B42F14CB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FE23360A-AB17-4514-B3AA-AB7E9EE0E7E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE23360A-AB17-4514-B3AA-AB7E9EE0E7E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE23360A-AB17-4514-B3AA-AB7E9EE0E7E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE23360A-AB17-4514-B3AA-AB7E9EE0E7E2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

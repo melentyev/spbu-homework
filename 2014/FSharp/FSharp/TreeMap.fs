@@ -11,7 +11,7 @@ module Map =
 
     let private isEmpty = function Empty -> true | _ -> false  
 
-    let private left =  function 
+    let private left = function 
         | Empty -> failwith "empty" 
         | Fork(x, _, _, _, _) -> x
          
@@ -48,12 +48,12 @@ module Map =
     let private balance = function
         | Fork(l, r, k, v, h) as t -> 
             if height r - height l > 1 then 
-                if not (height (left r) <= height (right r) )  
+                if height (left r) > height (right r) 
                 then fork l (right_rotate r) k v
                 else t
                 |> left_rotate
             elif height l - height r > 1 then
-                if not (height (right l) <= height(left l) ) 
+                if height (right l) < height(left l) 
                 then fork (left_rotate l) r k v
                 else t
                 |> right_rotate
@@ -120,7 +120,6 @@ module Map =
                 | Fork(l, r, _, _, _) as f -> traverse l @ f :: traverse r
             let fullpath = Empty :: traverse x.t
             let path = ref fullpath
-            let reset() = path := fullpath
             let current() = 
                 match List.head !path with 
                         | Fork(_, _, k, v, _) -> (k,v)

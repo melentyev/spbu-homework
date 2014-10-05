@@ -59,6 +59,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="packages.config" />
+    <Compile Include="TreeMap.fs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="AIMLbot">

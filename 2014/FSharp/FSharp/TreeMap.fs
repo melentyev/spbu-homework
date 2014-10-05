@@ -115,27 +115,15 @@ module Map =
         }
         
         member private x.getEnumerator() = 
-            let rec traverse = function 
-                | Empty -> [] 
-                | Fork(l, r, _, _, _) as f -> traverse l @ f :: traverse r
-            let fullpath = Empty :: traverse x.t
-            let path = ref fullpath
-            let current() = 
-                match List.head !path with 
-                        | Fork(_, _, k, v, _) -> (k,v)
-                        | _ -> failwith "e.Current"
-            { new IEnumerator<_> with
-                member e.Current = current()
-            interface IEnumerator with
-                member e.Current = current() |> box
-                member e.MoveNext() = 
-                    path := List.tail !path
-                    not <| List.isEmpty !path
-                    
-                member e.Reset() = path := fullpath 
-            interface System.IDisposable with 
-                member e.Dispose() = () 
-                }
+            let rec traverse t = 
+                seq { match t with
+                      | Empty -> ()
+                      | Fork(l, r, k, v, _) -> 
+                        yield! traverse l  
+                        yield (k, v)
+                        yield! traverse r }
+            (traverse x.t).GetEnumerator()
+            
 
         member x.Add(k, v) = 
             let v = 

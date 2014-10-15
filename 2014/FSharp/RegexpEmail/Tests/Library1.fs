@@ -7,25 +7,25 @@ open MainCheckModule
 [<TestFixture>]
 module RegexpEmailTests =  
     [<Test>]  
-    let ``aATb.cc``                             () = checkEmail "a@b.cc" |> should equal true
+    let ``aATb.cc``                             () = checkEmail "a@b.cc" |> should be True
     [<Test>]  
-    let ``victor.polozovATmail.ru``             () = checkEmail "victor.polozov@mail.ru" |> should equal true
+    let ``victor.polozovATmail.ru``             () = checkEmail "victor.polozov@mail.ru" |> should be True
     [<Test>]  
-    let ``myATdomain.info``                     () = checkEmail "my@domain.info" |> should equal true
+    let ``myATdomain.info``                     () = checkEmail "my@domain.info" |> should be True
     [<Test>]  
-    let ``_.1ATmail.com``                       () = checkEmail "_.1@mail.com" |> should equal true
+    let ``_.1ATmail.com``                       () = checkEmail "_.1@mail.com" |> should be True
     [<Test>]  
-    let ``paints_departmentAThermitage.museum`` () = checkEmail "paints_department@hermitage.museum" |> should equal true
+    let ``paints_tmentAThermitage.museum`` () = checkEmail "paints_tment@hermitage.museum" |> should be True
     
     [<Test>]  
-    let ``aATb.c``                              () = checkEmail "a@b.c" |> should equal false
+    let ``aATb.c``                              () = checkEmail "a@b.c" |> should be False
     [<Test>]  
-    let ``a..bATmail.ru``                       () = checkEmail "a..b@mail.ru" |> should equal false
+    let ``a..bATmail.ru``                       () = checkEmail "a..b@mail.ru" |> should be False
     [<Test>]  
-    let ``.aATmail.ru``                         () = checkEmail ".a@mail.ru" |> should equal false
+    let ``.aATmail.ru``                         () = checkEmail ".a@mail.ru" |> should be False
     [<Test>]  
-    let ``yoATdomain.somedomain``               () = checkEmail "yo@domain.somedomain" |> should equal false
+    let ``yoATdomain.somedomain``               () = checkEmail "yo@domain.somedomain" |> should be False
     [<Test>]  
-    let ``1ATmail.ru``                          () = checkEmail "1@mail.ru" |> should equal false
+    let ``1ATmail.ru``                          () = checkEmail "1@mail.ru" |> should be False
 
 

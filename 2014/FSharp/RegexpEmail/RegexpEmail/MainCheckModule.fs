@@ -7,7 +7,7 @@ open ARSoft.Tools.Net.Dns
 
 let checkEmail s = 
     let preffix = @"[a-zA-Z_][\w\-]*(\.[\-\w]+)*";
-    let suffix = @"([\w\-]+[\.])+(ru|com|cc|ua|ord|info|gov|edu|net|museum)";
+    let suffix = @"([\w\-]+[\.])+((\w{2,3})|info|museum|travel|xxx|name|mobi|jobs|coop|asia|aero)";
     let pattern = "^" + preffix + "@" + "(?<Domain>(" + suffix + "))$" 
     Regex.Match(s, pattern).Success
 //    let res = Regex.Match(s, pattern)

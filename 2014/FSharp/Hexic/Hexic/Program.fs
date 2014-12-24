@@ -169,21 +169,20 @@ let game n m  colors seed  log =
     printField ()
     multiKillTriplesAll() |> ignore
     printField ()
-    let mutable points = 0
-    let mutable isDone = false
-    while not isDone do
-        match findBestRotate () with 
-        | None -> isDone <- true
-        | Some (((a, b, c), (na, nb, nc)), value) when value > 0 ->  
+
+    Seq.initInfinite (fun _ -> findBestRotate ()) 
+    |> Seq.takeWhile Option.isSome
+    |> Seq.map Option.get
+    |> Seq.map  
+        (fun (((a, b, c), (na, nb, nc)), value) -> 
             printFieldM [a; b; c]
             setCells (a, b, c) (na, nb, nc) 
             printFieldM [a; b; c]
             let value = multiKillTriplesAll ()
-            points <- points + value
             printField ()
             printfn "Step done"
-        | _ -> failwith "unexpected"
-    points
+            value)
+    |> Seq.sum
 
 [<EntryPoint>]
 let main argv = 

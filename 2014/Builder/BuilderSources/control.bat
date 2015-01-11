@@ -1,23 +1,31 @@
-@echo off
+@ECHO OFF
 
 SET startup=control
+SET basedir=%cd%
 
-echo Starting...
+ECHO Starting...
 
-CALL %basedir%\settings.bat
+CALL %basedir%\config.bat
 
-CALL %basedir%\cleanup.bat
+CALL %basedir%\clean.bat
+IF %clean_failed% EQU "1" GOTO :Email
 
-::CALL %basedir%\clone.bat
+CALL %basedir%\gitclone.bat
+IF %gitclone_failed% EQU "1" GOTO :Email
 
-::CALL %basedir%\build.bat
+CALL %basedir%\build.bat
+IF %build_failed% EQU "1" GOTO :Email
 
-::CALL %basedir%\build_check.bat
+ECHO after build
+CALL %basedir%\build_check.bat
+IF %build_check_failed% EQU "1" GOTO :Email
 
-::CALL %basedir%\run_tests.bat
+CALL %basedir%\run_tests.bat
+IF %run_tests_failed% EQU "1" GOTO :Email
 
-::CALL %basedir%\email.bat success
+:Email
+CALL %basedir%\mail.bat
 
-echo Finished
+ECHO Builder finished. (%msg_body%)
 
-::IF "%clone_failed%" == "TRUE" GOTO :Email
+pause

@@ -1,13 +1,17 @@
-@echo off
+@ECHO OFF
 
-echo Building solution...
+IF "%startup%" NEQ "control" GOTO :EOF
 
-%MSBuildDir%\MSBuild.exe %repoPath%\%solution% /p:Configuration=Release;VisualStudioVersion=12.0 >%MSBuildLog%
-if ERRORLEVEL 1 goto :error
+ECHO Building solution...
 
-echo Build completed.
-goto :EOF
+%msbuild% %solution% /p:Configuration=Release;VisualStudioVersion=12.0 > %build_log%
+IF ERRORLEVEL 1 GOTO :error
+
+ECHO Build completed.
+GOTO :EOF
 
 :Error
-echo Build failed!
-call email.bat
+ECHO Build failed!
+SET build_failed="1"
+SET msg_attachment_cmd=-attach %build_log%
+SET msg_body=Builder failed (build failed).

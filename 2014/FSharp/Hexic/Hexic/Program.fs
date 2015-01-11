@@ -186,7 +186,10 @@ let game n m  colors seed  log =
 
 [<EntryPoint>]
 let main argv = 
-    let res = game 7 6 7 1487 false
-    printfn "res: %d" res
+    //let res = game 7 6 7 1487 false
+    let a = [|1; 2; 3|]
+    let s = String.Join(",", a)
+    //let di = System.IO.Directory.CreateDirectory(@"C:\Users\user\mdir1\");
+    //printfn "res: %d" res
     System.Console.ReadKey() |> ignore
     0

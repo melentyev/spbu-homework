@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!--This file represents the results of running a test suite-->
+<test-results name="C:\Users\user\Documents\GitHub\spbu-homework\2014\Builder\SEIntroGeom\SeIntroGeom\Tests\bin\Release\Tests.dll" total="5" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2015-01-11" time="21:55:28">
+  <environment nunit-version="2.6.4.14350" clr-version="2.0.50727.8009" os-version="Microsoft Windows NT 6.2.9200.0" platform="Win32NT" cwd="C:\Users\user\Documents\GitHub\spbu-homework\2014\Builder\BuilderSources" machine-name="MELENTYEV" user="user" user-domain="MELENTYEV" />
+  <culture-info current-culture="ru-RU" current-uiculture="ru-RU" />
+  <test-suite type="Assembly" name="C:\Users\user\Documents\GitHub\spbu-homework\2014\Builder\SEIntroGeom\SeIntroGeom\Tests\bin\Release\Tests.dll" executed="True" result="Success" success="True" time="0.260" asserts="0">
+    <results>
+      <test-suite type="Namespace" name="SeIntroGeom" executed="True" result="Success" success="True" time="0.233" asserts="0">
+        <results>
+          <test-suite type="TestFixture" name="Tests" executed="True" result="Success" success="True" time="0.229" asserts="0">
+            <results>
+              <test-case name="SeIntroGeom.Tests.point in triangle" executed="True" result="Success" success="True" time="0.105" asserts="1" />
+              <test-case name="SeIntroGeom.Tests.point not in triangle" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+              <test-case name="SeIntroGeom.Tests.point on triangle border" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+              <test-case name="SeIntroGeom.Tests.Rects must itersect" executed="True" result="Success" success="True" time="0.086" asserts="1" />
+              <test-case name="SeIntroGeom.Tests.Rects must not itersect" executed="True" result="Success" success="True" time="0.001" asserts="1" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>

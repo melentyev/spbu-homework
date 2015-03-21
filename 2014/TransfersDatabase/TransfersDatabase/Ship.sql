@@ -1,0 +1,4 @@
+﻿CREATE TABLE [dbo].[Ship]
+(
+	[Id] INT NOT NULL PRIMARY KEY
+)

@@ -14,7 +14,14 @@ DBCC CHECKIDENT ([Client2Contact], RESEED, 1);
 DBCC CHECKIDENT ([OrderContainer], RESEED, 1);
 DBCC CHECKIDENT ([Ship], RESEED, 1);
 
-insert into dbo.Ship ([Name], [Port]) values ('Титаник', 'Севастополь'), ('Потемкин', 'Мадагаскар')
+insert into dbo.Ship ([Name], [Port]) values 
+	('Titanik', 'Sevastopol'), ('Potemkin', 'Madagascar')
+insert into dbo.[Order] ([Date], [Name], [UnitWeigth], [UnitVolume], [ShipId], [Scheduled]) values
+	('2005-07-01 10:11:00.000', 'Order1', 10.0, 10.0, 1, '2005-07-01 10:11:00.000')
+insert into dbo.Client ([Name], [LegalAddress], [Characteristic]) values 
+	('IBM', 'Sevastopol, 2321, 021', 'adasjdsjdasdjasdasjdjasdnasjdasjdmasdjasjd')
+insert into dbo.Contact ([Name], [Phone], [Fax], [Email], [Address]) values 
+	('Ivanov', '1111', '1111', '213@sadas.ru', 'asdsad')
 
 /*
 insert into dbo.[Student] ([Name], [Phone], [Address]) values 

@@ -40,13 +40,13 @@ select c.Id
 	where (
 		select count(*) 
 				from [Order] o 
-				where o.ShipId = (select id from [Ship] where Name = 'Титаник')
+				where o.ShipId = (select id from [Ship] where Name = 'Titanik')
 		) > 2
 
 --Примеры на редактирование:
 -- 1.	Удалить контакное лицо - Иванова.
-delete from [ClientContact] where [Name] = 'Иванов'
+delete from [ClientContact] where [Name] = 'Ivanov'
 -- 2.	Удалить все заказы, связанные с Титаником.
-delete from [Order] where ShipId = (select id from [Ship] where Name = 'Титаник')
+delete from [Order] where ShipId = (select id from [Ship] where Name = 'Titanik')
 -- 3.	Заменить порт приписки кораблей Севастополь на Одессу
-update [Ship] set Port = 'Одесса' where Port = 'Севастополь'
+update [Ship] set Port = 'Odessa' where Port = 'Sevastopol'

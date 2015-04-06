@@ -64,7 +64,7 @@
   <ItemGroup>
     <Build Include="Container.sql" />
     <Build Include="Order.sql" />
-    <Build Include="ClientContact.sql" />
+    <Build Include="Contact.sql" />
     <Build Include="Client.sql" />
     <Build Include="Ship.sql" />
     <Build Include="OrderContainer.sql" />

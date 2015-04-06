@@ -2,9 +2,20 @@
 delete from dbo.[Order];
 delete from dbo.[Client];
 delete from dbo.[ClientContact];
+delete from dbo.[Client2Contact];
+delete from dbo.[OrderContainer];
+delete from dbo.[Ship];
 
 DBCC CHECKIDENT ([Container], RESEED, 1);
 DBCC CHECKIDENT ([Order], RESEED, 1);
+DBCC CHECKIDENT ([Client], RESEED, 1);
+DBCC CHECKIDENT ([ClientContact], RESEED, 1);
+DBCC CHECKIDENT ([Client2Contact], RESEED, 1);
+DBCC CHECKIDENT ([OrderContainer], RESEED, 1);
+DBCC CHECKIDENT ([Ship], RESEED, 1);
+
+insert into dbo.Ship ([Name], [Port]) values ('Титаник', 'Севастополь'), ('Потемкин', 'Мадагаскар')
+
 /*
 insert into dbo.[Student] ([Name], [Phone], [Address]) values 
 (N'Иванов', '1234567',	N'Невский,9'),

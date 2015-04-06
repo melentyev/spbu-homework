@@ -67,6 +67,8 @@
     <Build Include="ClientContact.sql" />
     <Build Include="Client.sql" />
     <Build Include="Ship.sql" />
+    <Build Include="OrderContainer.sql" />
+    <Build Include="Client2Contact.sql" />
   </ItemGroup>
   <ItemGroup>
     <RefactorLog Include="TransfersDatabase.refactorlog" />

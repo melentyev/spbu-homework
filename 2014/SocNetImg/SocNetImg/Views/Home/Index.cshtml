@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h2>Photos from social networks!</h2>
+    <p class="lead">Facebook is not facebook for a while - it is <a href="http://randomuser.me/">randomuser.me</a></p>
+</div>
+
+<div class="row">
+    <div class="col-md-3">
+        <p><a class="btn btn-default" id="btn-prev-photo" href="#">Prev &laquo;</a></p>
+    </div>
+    <div class="col-md-6">
+        <div id="photoblock">
+            <center>
+                <img id="photoblock-photo" src="" />
+            </center>
+        </div>
+        <div id="photocache"></div>
+    </div>
+    <div class="col-md-3">
+        <p><a class="btn btn-default" id="btn-next-photo" href="#">Next &raquo;</a></p>
+    </div>
+</div>
+
+<form action="/Home/GetProfile" id="filter-form">
+    <div class="row">
+        <div class="col-md-6">
+            <h2><input type="checkbox" checked="checked" name="filter-vk-on"/> vk.com</h2>
+            @Html.Raw(@ViewBag.VkNeedAuthMessage)<br/>
+            <p>
+                <select name="vk-filter-gender">
+                    <option value="0">Any</option>
+                    <option value="1" selected="selected">Female</option>
+                    <option value="2">Male</option>
+                </select>
+            </p>
+            <!--<p><label for="vk-filter-age_from">Age from:</label><input type="number" name="vk-filter-age_from" value="17" id="vk-filter-age_from" /></p>
+            <p><label for="vk-filter-age_to">Age to:</label><input type="number" name="vk-filter-age_to" value="27" id="vk-filter-age_to" /></p>-->
+        </div>
+        <div class="col-md-6">
+            <h2><input type="checkbox" checked="checked"  name="filter-fb-on" /> Facebook</h2>
+            @Html.Raw(@ViewBag.FbNeedAuthMessage)<br/>
+            <select name="fb-filter-gender">
+                <option value="0">Any</option>
+                <option value="female" selected="selected">Female</option>
+                <option value="male">Male</option>
+            </select>
+        </div>
+    </div>
+</form>
+<style>
+    #btn-prev-photo, #btn-next-photo {
+        margin-top: 100px;
+    }
+</style>

@@ -39,7 +39,28 @@ namespace Localization
             ComponentResourceManager resources = new ComponentResourceManager(typeof(Form1));
             _ChangeLanguage(this, resources, cult);
             _ChangeMenuStripLanguage(menuStrip1.Items, resources, cult);
-            
+
+            comboBox1.Items.Clear();
+            comboBox1.Items.AddRange(new object[] {
+            resources.GetString("comboBox1.Items"),
+            resources.GetString("comboBox1.Items1")});
+
+            comboBox2.Items.Clear();
+            comboBox2.Items.AddRange(new object[] {
+            resources.GetString("comboBox2.Items"),
+            resources.GetString("comboBox2.Items1"),
+            resources.GetString("comboBox2.Items2")});
+
+            comboBox3.Items.Clear();
+            comboBox3.Items.AddRange(new object[] {
+            resources.GetString("comboBox3.Items"),
+            resources.GetString("comboBox3.Items1")});
+
+            comboBox4.Items.Clear();
+            comboBox4.Items.AddRange(new object[] {
+            resources.GetString("comboBox4.Items"),
+            resources.GetString("comboBox4.Items1"),
+            resources.GetString("comboBox4.Items2")});
         }
         private void _ChangeLanguage(Control c, ComponentResourceManager resources, CultureInfo cult)
         {
@@ -68,7 +89,12 @@ namespace Localization
             this.Close();
         }
 
-        private void label1_Click(object sender, EventArgs e)
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void comboBox3_SelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

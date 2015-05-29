@@ -61,6 +61,7 @@ namespace Localization
             resources.GetString("comboBox4.Items"),
             resources.GetString("comboBox4.Items1"),
             resources.GetString("comboBox4.Items2")});
+            this.Text = resources.GetString("$this.Text");
         }
         private void _ChangeLanguage(Control c, ComponentResourceManager resources, CultureInfo cult)
         {

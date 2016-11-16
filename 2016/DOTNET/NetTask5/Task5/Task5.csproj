@@ -48,6 +48,7 @@
   <ItemGroup>
     <Compile Include="Controllers\DeaneryController.cs" />
     <Compile Include="Models\ExamViewModel.cs" />
+    <Compile Include="Services\SleepManager.cs" />
     <Compile Include="Views\ExamView.cs">
       <SubType>Form</SubType>
     </Compile>

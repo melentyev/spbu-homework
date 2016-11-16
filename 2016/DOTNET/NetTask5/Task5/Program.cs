@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Task5.Controllers;
+using Task5.Services;
+
 namespace Task5
 {
     static class Program
@@ -16,6 +18,7 @@ namespace Task5
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+            SleepManager.Start();
             var contoller = new DeaneryController();
             Application.Run(contoller.Render());
         }

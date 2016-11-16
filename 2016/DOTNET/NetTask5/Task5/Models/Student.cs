@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
-using Task5.Controllers;
+using Task5.Services;
 
 namespace Task5.Models
 {
@@ -19,9 +15,11 @@ namespace Task5.Models
         private static Random rnd = new Random();
         private UInt32? mark;
 
-        private static string[] firstNames = new string[] { "Вася", "Петя", "Коля", "Макар", "Захар", "Гоша", "Витя" };
-        private static string[] lastNames = new string[] { "Васильев", "Петров", "Николаев", "Макаров", "Захаров", "Григорьев" };
-        
+        private static string[] firstNames =
+            new string[] { "Вася", "Петя", "Коля", "Макар", "Захар", "Гоша", "Витя" };
+        private static string[] lastNames =
+            new string[] { "Васильев", "Петров", "Николаев", "Макаров", "Захаров", "Григорьев" };
+
         internal string Name { get { return name; } }
 
         internal UInt32? Mark
@@ -44,16 +42,22 @@ namespace Task5.Models
                 return mark.HasValue ? mark.ToString() : "";
             }
         }
-        
+
+        internal bool IsCanceled { get; set; }
+
         internal Student(EventWaitHandle waitHandle, Action<Student> passExam)
         {
             name = RandomName();
             mark = null;
+            IsCanceled = false;
             new Thread(() =>
             {
                 waitHandle.WaitOne();
-                Thread.Sleep(RandomSleepTime());
-                passExam(this);
+                SleepManager.Sleep(RandomSleepTime());
+                if (!IsCanceled)
+                {
+                    passExam(this);
+                }
             }).Start();
         }
 

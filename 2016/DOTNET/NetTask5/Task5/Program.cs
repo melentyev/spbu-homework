@@ -18,7 +18,6 @@ namespace Task5
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            SleepManager.Start();
             var contoller = new DeaneryController();
             Application.Run(contoller.Render());
         }

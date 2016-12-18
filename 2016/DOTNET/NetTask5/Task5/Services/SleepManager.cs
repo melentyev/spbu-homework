@@ -5,33 +5,44 @@ using System.Diagnostics;
 
 namespace Task5.Services
 {
-    class SleepManager
+    internal class SleepManager
     {
-        private static Stopwatch sw;
-        private static long pauseStart;
-        private static bool isRunning;
-        private static List<Tuple<long, EventWaitHandle> > wakeupEvents;
-        private static object sleepManagerLock;
+        const long NotPaused = -1;
 
-        public static void Start()
+        private static SleepManager instance;
+
+        internal static SleepManager Instance { get { return instance; } }
+        static SleepManager()
         {
-            pauseStart = -1;
-            sleepManagerLock = new object();
-            sw = new Stopwatch();
-            sw.Start();
-            wakeupEvents = new List<Tuple<long, EventWaitHandle> >();
+            instance = new SleepManager();
+        }
 
+        internal SleepManager()
+        {
+            Start();
+        }
+
+        private Stopwatch sw = new Stopwatch();
+        private long pauseStart = NotPaused;
+        private bool isRunning;
+        private List<Tuple<long, EventWaitHandle> > wakeupEvents = 
+            new List<Tuple<long, EventWaitHandle> >();
+        private object sleepManagerLock = new object();
+
+        private void Start()
+        {
+            sw.Start();
             new Thread(Run).Start();
         }
 
-        private static void Run()
+        private void Run()
         {
             isRunning = true;
             while (isRunning)
             {
                 lock (sleepManagerLock)
                 {
-                    if (pauseStart == -1)
+                    if (!IsPaused())
                     {
                         for (int i = 0; i < wakeupEvents.Count; i++)
                         {
@@ -49,7 +60,7 @@ namespace Task5.Services
         }
 
         // Call from other thread
-        public static void Sleep(int ms)
+        internal void Sleep(int ms)
         {
             var handle = new EventWaitHandle(false, EventResetMode.ManualReset);
             handle.Reset();
@@ -60,12 +71,12 @@ namespace Task5.Services
             handle.WaitOne();
         }
 
-        public static void PauseAll()
+        internal void PauseAll()
         {
             pauseStart = sw.ElapsedMilliseconds;
         }
 
-        public static void ResumeAll()
+        internal void ResumeAll()
         {
             lock (sleepManagerLock)
             {
@@ -74,11 +85,11 @@ namespace Task5.Services
                 {
                     wakeupEvents[i] = Tuple.Create(wakeupEvents[i].Item1 + pauseTotal, wakeupEvents[i].Item2);
                 }
-                pauseStart = -1;
+                pauseStart = NotPaused;
             }
         }
 
-        public static void CancelAll()
+        internal void CancelAll()
         {
             lock (sleepManagerLock)
             {
@@ -88,6 +99,10 @@ namespace Task5.Services
                 }
                 wakeupEvents.Clear();
             }
+        }
+        internal bool IsPaused()
+        {
+            return pauseStart != NotPaused;
         }
     }
 }

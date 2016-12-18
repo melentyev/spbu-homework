@@ -14,7 +14,7 @@ namespace NetTask6.Views
 {
     internal partial class SearchView : Form
     {
-        internal delegate void UserInputEventHandler(string name, string director, string actor);
+        internal delegate void UserInputEventHandler(string name, uint year, string director, string actor);
         internal delegate void SearchEventHandler();
         internal delegate void ClearEventHandler();
 
@@ -25,6 +25,7 @@ namespace NetTask6.Views
         internal SearchView(SearchViewModel data)
         {
             InitializeComponent();
+            searchViewYearInput.SetErrorProvider(searchMovieFormErrorProvider);
             data.Changed += UpdateFromModel;
         }
 
@@ -33,6 +34,10 @@ namespace NetTask6.Views
             if (this.searchViewFilmNameEdit.Text != data.Name)
             {
                 this.searchViewFilmNameEdit.Text = data.Name;
+            }
+            if (this.searchViewCountryInput.Text != data.Country)
+            {
+                this.searchViewCountryInput.Text = data.Country;
             }
             if (this.searchViewDirector.Text != data.Director)
             {
@@ -46,12 +51,12 @@ namespace NetTask6.Views
 
         private void searchFormBtnClear_Click(object sender, EventArgs e)
         {
-            Clear();
+            if (Clear != null) { Clear(); }
         }
 
         private void searchFormBtnSearch_Click(object sender, EventArgs e)
         {
-            Search();
+            if (Search != null) { Search(); }
         }
 
         private void searchViewFilmNameEdit_TextChanged(object sender, EventArgs e)
@@ -66,7 +71,24 @@ namespace NetTask6.Views
 
         private void FireUserInput()
         {
-            UserInput(searchViewFilmNameEdit.Text, searchViewDirector.Text, "");
+            UserInput(searchViewFilmNameEdit.Text,
+                searchViewYearInput.IsValid ? UInt32.Parse(searchViewYearInput.Text) : 0,
+                searchViewDirector.Text, "");
+        }
+
+        private void searchViewActor_TextChanged(object sender, EventArgs e)
+        {
+            FireUserInput();
+        }
+
+        private void searchViewYearInput_TextChanged(object sender, EventArgs e)
+        {
+            FireUserInput();
+        }
+
+        private void searchViewCountryInput_TextChanged(object sender, EventArgs e)
+        {
+            FireUserInput();
         }
     }
 }

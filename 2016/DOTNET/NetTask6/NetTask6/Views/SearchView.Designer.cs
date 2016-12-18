@@ -37,8 +37,12 @@
             this.label3 = new System.Windows.Forms.Label();
             this.searchFormBtnSearch = new System.Windows.Forms.Button();
             this.searchFormBtnClear = new System.Windows.Forms.Button();
-            this.searchMovieFormEerrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
-            ((System.ComponentModel.ISupportInitialize)(this.searchMovieFormEerrorProvider)).BeginInit();
+            this.searchMovieFormErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
+            this.label4 = new System.Windows.Forms.Label();
+            this.searchViewCountryInput = new System.Windows.Forms.TextBox();
+            this.label5 = new System.Windows.Forms.Label();
+            this.searchViewYearInput = new NetTask6.Views.YearInput();
+            ((System.ComponentModel.ISupportInitialize)(this.searchMovieFormErrorProvider)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -52,6 +56,8 @@
             // 
             // searchViewFilmNameEdit
             // 
+            this.searchViewFilmNameEdit.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.searchViewFilmNameEdit.Location = new System.Drawing.Point(13, 34);
             this.searchViewFilmNameEdit.Name = "searchViewFilmNameEdit";
             this.searchViewFilmNameEdit.Size = new System.Drawing.Size(278, 22);
@@ -61,7 +67,7 @@
             // label2
             // 
             this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(13, 59);
+            this.label2.Location = new System.Drawing.Point(13, 158);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(72, 17);
             this.label2.TabIndex = 2;
@@ -69,8 +75,10 @@
             // 
             // searchViewDirector
             // 
+            this.searchViewDirector.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.searchViewDirector.FormattingEnabled = true;
-            this.searchViewDirector.Location = new System.Drawing.Point(13, 80);
+            this.searchViewDirector.Location = new System.Drawing.Point(13, 179);
             this.searchViewDirector.Name = "searchViewDirector";
             this.searchViewDirector.Size = new System.Drawing.Size(278, 24);
             this.searchViewDirector.TabIndex = 3;
@@ -78,16 +86,19 @@
             // 
             // searchViewActor
             // 
+            this.searchViewActor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.searchViewActor.FormattingEnabled = true;
-            this.searchViewActor.Location = new System.Drawing.Point(12, 128);
+            this.searchViewActor.Location = new System.Drawing.Point(12, 230);
             this.searchViewActor.Name = "searchViewActor";
             this.searchViewActor.Size = new System.Drawing.Size(278, 24);
             this.searchViewActor.TabIndex = 5;
+            this.searchViewActor.TextChanged += new System.EventHandler(this.searchViewActor_TextChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 107);
+            this.label3.Location = new System.Drawing.Point(12, 209);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(47, 17);
             this.label3.TabIndex = 4;
@@ -95,7 +106,10 @@
             // 
             // searchFormBtnSearch
             // 
-            this.searchFormBtnSearch.Location = new System.Drawing.Point(192, 346);
+            this.searchFormBtnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchFormBtnSearch.Location = new System.Drawing.Point(206, 346);
             this.searchFormBtnSearch.Name = "searchFormBtnSearch";
             this.searchFormBtnSearch.Size = new System.Drawing.Size(99, 23);
             this.searchFormBtnSearch.TabIndex = 6;
@@ -105,7 +119,10 @@
             // 
             // searchFormBtnClear
             // 
-            this.searchFormBtnClear.Location = new System.Drawing.Point(83, 346);
+            this.searchFormBtnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchFormBtnClear.Location = new System.Drawing.Point(97, 346);
             this.searchFormBtnClear.Name = "searchFormBtnClear";
             this.searchFormBtnClear.Size = new System.Drawing.Size(101, 23);
             this.searchFormBtnClear.TabIndex = 7;
@@ -113,15 +130,57 @@
             this.searchFormBtnClear.UseVisualStyleBackColor = true;
             this.searchFormBtnClear.Click += new System.EventHandler(this.searchFormBtnClear_Click);
             // 
-            // searchMovieFormEerrorProvider
+            // searchMovieFormErrorProvider
             // 
-            this.searchMovieFormEerrorProvider.ContainerControl = this;
+            this.searchMovieFormErrorProvider.ContainerControl = this;
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(13, 106);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(90, 17);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Год выпуска";
+            // 
+            // searchViewCountryInput
+            // 
+            this.searchViewCountryInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchViewCountryInput.Location = new System.Drawing.Point(12, 81);
+            this.searchViewCountryInput.Name = "searchViewCountryInput";
+            this.searchViewCountryInput.Size = new System.Drawing.Size(278, 22);
+            this.searchViewCountryInput.TabIndex = 10;
+            this.searchViewCountryInput.TextChanged += new System.EventHandler(this.searchViewCountryInput_TextChanged);
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(13, 61);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(56, 17);
+            this.label5.TabIndex = 11;
+            this.label5.Text = "Страна";
+            // 
+            // searchViewYearInput
+            // 
+            this.searchViewYearInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchViewYearInput.Location = new System.Drawing.Point(12, 129);
+            this.searchViewYearInput.Name = "searchViewYearInput";
+            this.searchViewYearInput.Size = new System.Drawing.Size(279, 22);
+            this.searchViewYearInput.TabIndex = 8;
+            this.searchViewYearInput.TextChanged += new System.EventHandler(this.searchViewYearInput_TextChanged);
             // 
             // SearchView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(303, 381);
+            this.ClientSize = new System.Drawing.Size(317, 381);
+            this.Controls.Add(this.label5);
+            this.Controls.Add(this.searchViewCountryInput);
+            this.Controls.Add(this.label4);
+            this.Controls.Add(this.searchViewYearInput);
             this.Controls.Add(this.searchFormBtnClear);
             this.Controls.Add(this.searchFormBtnSearch);
             this.Controls.Add(this.searchViewActor);
@@ -132,7 +191,7 @@
             this.Controls.Add(this.label1);
             this.Name = "SearchView";
             this.Text = "SearchView";
-            ((System.ComponentModel.ISupportInitialize)(this.searchMovieFormEerrorProvider)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.searchMovieFormErrorProvider)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -148,6 +207,10 @@
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button searchFormBtnSearch;
         private System.Windows.Forms.Button searchFormBtnClear;
-        private System.Windows.Forms.ErrorProvider searchMovieFormEerrorProvider;
+        private System.Windows.Forms.ErrorProvider searchMovieFormErrorProvider;
+        private System.Windows.Forms.Label label4;
+        private YearInput searchViewYearInput;
+        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.TextBox searchViewCountryInput;
     }
 }

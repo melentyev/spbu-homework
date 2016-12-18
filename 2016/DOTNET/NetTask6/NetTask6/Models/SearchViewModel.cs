@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace NetTask6.Models
+﻿namespace NetTask6.Models
 {
     class SearchViewModel
     {
@@ -15,6 +9,20 @@ namespace NetTask6.Models
         internal string Name {
             get { return name; }
             set { name = value; Update(); }
+        }
+
+        private string country;
+        internal string Country
+        {
+            get { return country; }
+            set { country = value; Update(); }
+        }
+
+        private uint year;
+        internal uint Year
+        {
+            get { return year; }
+            set { year = value; Update(); }
         }
 
         private string director;

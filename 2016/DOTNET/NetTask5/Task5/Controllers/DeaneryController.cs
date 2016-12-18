@@ -9,7 +9,7 @@ namespace Task5.Controllers
 {
     internal sealed class DeaneryController
     {
-        const int MaxStudentCount = 5;
+        const int MaxStudentCount = 8;
         const int MaxMarkSleep = 3 * 1000;
 
         private Random rnd;
@@ -39,6 +39,7 @@ namespace Task5.Controllers
 
         internal void ActionStart()
         {
+            students.Clear();
             examViewModel.Clear();
             examViewModel.StartButtonActive = false;
             examViewModel.ButtonPauseActive = true;
@@ -56,13 +57,13 @@ namespace Task5.Controllers
 
         internal void ActionPause()
         {
-            SleepManager.PauseAll();
+            SleepManager.Instance.PauseAll();
             examViewModel.ButtonPauseActive = false;
             examViewModel.ButtonResumeActive = true;
         }
         internal void ActionResume()
         {
-            SleepManager.ResumeAll();
+            SleepManager.Instance.ResumeAll();
             examViewModel.ButtonPauseActive = true;
             examViewModel.ButtonResumeActive = false;
         }
@@ -71,8 +72,8 @@ namespace Task5.Controllers
         {
             students.ForEach(s => s.IsCanceled = true);
             students.Clear();
-            SleepManager.CancelAll();
-            SleepManager.ResumeAll();
+            SleepManager.Instance.CancelAll();
+            SleepManager.Instance.ResumeAll();
             ResetButtonsState();
         }
 
@@ -96,7 +97,7 @@ namespace Task5.Controllers
             {
                 if (student.IsCanceled) { return; }
                 examViewModel.AddStudent(student);
-                SleepManager.Sleep(rnd.Next(MaxMarkSleep));
+                SleepManager.Instance.Sleep(rnd.Next(MaxMarkSleep));
 
                 if (student.IsCanceled) { return; }
                 student.Mark = RandomStudentMark();

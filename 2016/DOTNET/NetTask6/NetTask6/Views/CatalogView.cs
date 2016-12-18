@@ -31,20 +31,33 @@ namespace NetTask6.Views
 
         const int moviesInRow = 2;
 
+        internal ToolStripMenuItem ExitMenuItem { get { return exitToolStripMenuItem; } }
+        internal ToolStripMenuItem FindMovieMenuItem { get { return findFilmToolStripMenuItem; } }
+
         internal CatalogView(
             MoviesGridViewModel data, 
             IAutocompleteSource directorsAutocompleteSource,
             IAutocompleteSource actorsAutocompleteSource)
         {
             InitializeComponent();
-            for (int i = 0; i < moviesInRow; i++)
-            {
-                var column = new TextAndImageColumn();
-                column.Width = 300;
-                column.Resizable = DataGridViewTriState.False;
-                column.ReadOnly = true;
-                dataGridView1.Columns.Add(column);
-            }
+
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
+
+            var imageColumn = new DataGridViewImageColumn();
+            var nameColumn = new DataGridViewTextBoxColumn();
+            var yearColumn = new DataGridViewTextBoxColumn();
+
+            dataGridView1.Columns.Add(imageColumn);
+            dataGridView1.Columns.Add(nameColumn);
+            dataGridView1.Columns.Add(yearColumn);
+
+            imageColumn.Resizable = DataGridViewTriState.False;
+            nameColumn.Resizable = DataGridViewTriState.False;
+            yearColumn.Resizable = DataGridViewTriState.False;
+
+            imageColumn.ReadOnly = true;
+            nameColumn.ReadOnly = true;
+            yearColumn.ReadOnly = true;
 
             editFormDirector.SetSource(directorsAutocompleteSource);
             editFormAddActor.SetSource(actorsAutocompleteSource);
@@ -55,6 +68,8 @@ namespace NetTask6.Views
             data.Changed += UpdateGridView;
             UpdateGridView(data);
             ShowMovieGrid();
+
+            CatalogView_Resize(null, null);
         }
 
         internal void SetGridTitle(string title) { gridTitleLabel.Text = title; }
@@ -95,34 +110,31 @@ namespace NetTask6.Views
 
         private void UpdateGridView(MoviesGridViewModel data) {
             
-            int moviesRowHeight = 100;
-            int moviesInCurrentRow = 0;
+            int moviesRowHeight = 200;
             DataGridViewRow currentRow = null;
-            var cells = new List<TextAndImageCell>();
+            var cells = new List<DataGridViewImageCell>();
 
             dataGridView1.Rows.Clear();
 
             data.Movies.ForEach(movie =>
             {
-                if (moviesInCurrentRow == 0)
-                {
-                    currentRow = new DataGridViewRow();
-                    currentRow.Height = moviesRowHeight;
-                    
-                }
+                currentRow = new DataGridViewRow();
+                currentRow.Height = moviesRowHeight;
+                currentRow.Tag = movie;
 
-                var cell = new TextAndImageCell();
-                cell.Value = movie.Name;
-                cell.Tag = movie;
-                cells.Add(cell);
-                currentRow.Cells.Add(cell);
-                
-                moviesInCurrentRow = (moviesInCurrentRow + 1) % moviesInRow;
-                if (moviesInCurrentRow == 0)
-                {
-                    dataGridView1.Rows.Add(currentRow);
+                var imageCell = new DataGridViewImageCell();
+                var nameCell = new DataGridViewTextBoxCell() { Value = movie.Name };
+                var yearCell = new DataGridViewTextBoxCell() { Value = movie.Year };
+
+                cells.Add(imageCell);
+
+                currentRow.Cells.Add(imageCell);
+                currentRow.Cells.Add(nameCell);
+                currentRow.Cells.Add(yearCell);
+
+                dataGridView1.Rows.Add(currentRow);
                     currentRow = null;
-                }
+                
             });
 
             if (currentRow != null)
@@ -133,7 +145,7 @@ namespace NetTask6.Views
             for (int i = 0; i < cells.Count; i++)
             {
                 var image = ImagesHelper.FromFile(data.Movies[i].Image);
-                cells[i].Image = image;
+                cells[i].Value = image;
             }
         }
 
@@ -155,8 +167,8 @@ namespace NetTask6.Views
 
         private void deleteFilmToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            
-            DeleteFilm(GetSelectedMovies());
+
+            if (DeleteFilm != null) { DeleteFilm(GetSelectedMovies()); }
         }
 
         private void editFilmToolStripMenuItem_Click(object sender, EventArgs e)
@@ -172,10 +184,10 @@ namespace NetTask6.Views
         private List<Movie> GetSelectedMovies()
         {
             var movies = new List<Movie>();
-            foreach (var cell in dataGridView1.SelectedCells)
+            foreach (var row in dataGridView1.SelectedRows)
             {
-                var movieCell = cell as TextAndImageCell;
-                movies.Add(movieCell.Tag as Movie);
+                var movieRow = row as DataGridViewRow;
+                movies.Add(movieRow.Tag as Movie);
             }
             return movies;
         }
@@ -228,6 +240,14 @@ namespace NetTask6.Views
         private void editMovieSaveBtn_Click(object sender, EventArgs e)
         {
             if (SaveMovie != null) { SaveMovie(); }
+        }
+
+        private void CatalogView_Resize(object sender, EventArgs e)
+        {
+            int dgwidth = dataGridView1.Width - dataGridView1.RowHeadersWidth * 2;
+            dataGridView1.Columns[0].Width = dgwidth / 3;
+            dataGridView1.Columns[1].Width = dgwidth / 3;
+            dataGridView1.Columns[2].Width = dgwidth / 3;
         }
     }
 }

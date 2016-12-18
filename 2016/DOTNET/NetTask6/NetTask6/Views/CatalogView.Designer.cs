@@ -40,6 +40,7 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editMoviePanel = new System.Windows.Forms.Panel();
+            this.editFormYear = new NetTask6.Views.YearInput();
             this.editFormActorsListBox = new System.Windows.Forms.ListBox();
             this.editFormDeleteActor = new System.Windows.Forms.Button();
             this.editFormAddActorBtn = new System.Windows.Forms.Button();
@@ -57,7 +58,6 @@
             this.gridTitleLabel = new System.Windows.Forms.Label();
             this.editMovieFormHelpProvider = new System.Windows.Forms.HelpProvider();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
-            this.editFormYear = new NetTask6.Views.YearInput();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.editMoviePanel.SuspendLayout();
@@ -67,8 +67,13 @@
             // 
             // dataGridView1
             // 
-            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
+            this.dataGridView1.AllowUserToAddRows = false;
+            this.dataGridView1.AllowUserToDeleteRows = false;
+            this.dataGridView1.AllowUserToResizeColumns = false;
+            this.dataGridView1.AllowUserToResizeRows = false;
+            this.dataGridView1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(13, 56);
             this.dataGridView1.Name = "dataGridView1";
@@ -117,21 +122,21 @@
             // editFilmToolStripMenuItem
             // 
             this.editFilmToolStripMenuItem.Name = "editFilmToolStripMenuItem";
-            this.editFilmToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.editFilmToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.editFilmToolStripMenuItem.Text = "&Edit movie";
             this.editFilmToolStripMenuItem.Click += new System.EventHandler(this.editFilmToolStripMenuItem_Click);
             // 
             // deleteFilmToolStripMenuItem
             // 
             this.deleteFilmToolStripMenuItem.Name = "deleteFilmToolStripMenuItem";
-            this.deleteFilmToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.deleteFilmToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.deleteFilmToolStripMenuItem.Text = "Delete movie";
             this.deleteFilmToolStripMenuItem.Click += new System.EventHandler(this.deleteFilmToolStripMenuItem_Click);
             // 
             // findFilmToolStripMenuItem
             // 
             this.findFilmToolStripMenuItem.Name = "findFilmToolStripMenuItem";
-            this.findFilmToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
+            this.findFilmToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.findFilmToolStripMenuItem.Text = "&Find movie...";
             this.findFilmToolStripMenuItem.Click += new System.EventHandler(this.findFilmToolStripMenuItem_Click);
             // 
@@ -173,6 +178,15 @@
             this.editMoviePanel.Name = "editMoviePanel";
             this.editMoviePanel.Size = new System.Drawing.Size(619, 409);
             this.editMoviePanel.TabIndex = 2;
+            // 
+            // editFormYear
+            // 
+            this.editFormYear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.editFormYear.Location = new System.Drawing.Point(311, 110);
+            this.editFormYear.Name = "editFormYear";
+            this.editFormYear.Size = new System.Drawing.Size(270, 22);
+            this.editFormYear.TabIndex = 18;
             // 
             // editFormActorsListBox
             // 
@@ -317,15 +331,6 @@
             this.gridTitleLabel.TabIndex = 3;
             this.gridTitleLabel.Text = "Все фильмы";
             // 
-            // editFormYear
-            // 
-            this.editFormYear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.editFormYear.Location = new System.Drawing.Point(311, 110);
-            this.editFormYear.Name = "editFormYear";
-            this.editFormYear.Size = new System.Drawing.Size(270, 22);
-            this.editFormYear.TabIndex = 18;
-            // 
             // CatalogView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -339,6 +344,7 @@
             this.Name = "CatalogView";
             this.Text = "Movies";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CatalogView_FormClosing);
+            this.Resize += new System.EventHandler(this.CatalogView_Resize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

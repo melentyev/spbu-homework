@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Threading;
+using System.Threading.Tasks;
 
 using NetTask6.Models;
 using NetTask6.Repositories;
@@ -14,6 +15,9 @@ namespace NetTask6.Controllers
 {
     internal class CatalogController
     {
+        const string StrApproveDeleteMovie = "Вы уверены что хотите удалить фильм \"{0}\"?";
+        const string StrApproveDeleteMovieCaption = "Подтвержедние";
+
         CatalogView catalogView;
         SearchView searchView;
 
@@ -62,8 +66,7 @@ namespace NetTask6.Controllers
 
         internal Form RenderMainView()
         {
-            searchView = new SearchView(searchViewModel);
-            searchView.Visible = false;
+            initSearchView();
 
             catalogView = new CatalogView(moviesGridViewModel, 
                 new DirectorsAutocompleteSource(directorRepository),
@@ -117,9 +120,11 @@ namespace NetTask6.Controllers
             {
                 if (searchView.IsDisposed)
                 {
-                    searchView = new SearchView(searchViewModel);
+                    initSearchView();
                 }
                 searchView.Show();
+                catalogView.FindMovieMenuItem.Checked = true;
+                catalogView.ExitMenuItem.Enabled = false;
             });
 
             catalogView.GoBack += (() =>
@@ -133,31 +138,30 @@ namespace NetTask6.Controllers
                 aboutView.ShowDialog();
             });
 
+            catalogView.DeleteFilm += (async (List<Movie> selected) =>
+            {
+                bool confirmed = true;
+                for (int i = 0; i < selected.Count; i++)
+                {
+                    var name = selected[i].Name;
+                    var res = MessageBox.Show(
+                        String.Format(StrApproveDeleteMovie, selected[i].Name),
+                        StrApproveDeleteMovieCaption, MessageBoxButtons.YesNo);
+                    if (res.HasFlag(DialogResult.No)) {
+                        confirmed = false;
+                        break;
+                    }
+                }
+                if (confirmed)
+                {
+                    await Task.WhenAll(selected.Select(x => movieRepository.Delete(x)).ToArray());
+                    GetMovies(null, null, null);
+                }
+            });
+
             catalogView.DeleteActor += ((position) =>
             {
                 editMovieViewModel.ActorsRemoveAt(position);
-            });
-
-            searchView.UserInput += ((name, director, actor) =>
-            {
-                searchViewModel.Name = name;
-                searchViewModel.Director = director;
-                searchViewModel.Actor = actor;
-            });
-
-            searchView.Search += (() =>
-            {
-                string name = searchViewModel.Name;
-                string director = searchViewModel.Director;
-                string actor = searchViewModel.Actor;
-                GetMovies(name, director, actor);
-            });
-
-            searchView.Clear += (() =>
-            {
-                searchViewModel.Name = "";
-                searchViewModel.Director = "";
-                searchViewModel.Actor = "";
             });
 
             getMovies.OnStarted += (() => 
@@ -168,6 +172,42 @@ namespace NetTask6.Controllers
 
             GetMovies(null, null, null);
             return catalogView;
+        }
+
+        private void initSearchView()
+        {
+            searchView = new SearchView(searchViewModel);
+            searchView.Visible = false;
+
+            searchView.UserInput += ((name, year, director, actor) =>
+            {
+                searchViewModel.Name = name;
+                searchViewModel.Year = year;
+                searchViewModel.Director = director;
+                searchViewModel.Actor = actor;
+            });
+
+            searchView.Search += (() =>
+            {
+                string name = searchViewModel.Name;
+                string director = searchViewModel.Director;
+                string actor = searchViewModel.Actor;
+                GetMovies(name, director, actor);
+                catalogView.Activate();
+            });
+
+            searchView.Clear += (() =>
+            {
+                searchViewModel.Name = "";
+                searchViewModel.Director = "";
+                searchViewModel.Actor = "";
+            });
+
+            searchView.FormClosed += ((s, e) =>
+            {
+                catalogView.FindMovieMenuItem.Checked = false;
+                catalogView.ExitMenuItem.Enabled = true;
+            });
         }
 
         private void GetMovies(string movieName, string director, string actor)

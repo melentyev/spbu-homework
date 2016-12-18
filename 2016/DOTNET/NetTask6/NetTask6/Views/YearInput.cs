@@ -1,15 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace NetTask6.Views
 {
     public class YearInput: TextBox
     {
-        const int min = 1895;
+        const int LumiereFirstFilmDate = 1895;
+
+        private ErrorProvider errorProvider;
+        internal bool IsValid
+        {
+            get
+            {
+                int parsed;
+                if (Int32.TryParse(Text, out parsed))
+                {
+                    if (parsed >= LumiereFirstFilmDate && parsed <= DateTime.Now.Year)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+        }
+
         public YearInput()
         {
             KeyPress += (sender, args) =>
@@ -17,15 +31,12 @@ namespace NetTask6.Views
                 args.Handled = !Char.IsDigit(args.KeyChar);
             };
 
-            TextChanged += (sender, args) =>
-            {
-                
-            };
-
             Validating += (sender, args) =>
             {
-
+                errorProvider.SetError(this, 
+                    IsValid ? "" : String.Format(Properties.Resources.YearInputInvalid, LumiereFirstFilmDate));
             };
         }
+        internal void SetErrorProvider(ErrorProvider ep) { errorProvider = ep; }
     }
 }

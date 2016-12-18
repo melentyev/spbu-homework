@@ -53,7 +53,7 @@ namespace Task5.Models
             new Thread(() =>
             {
                 waitHandle.WaitOne();
-                SleepManager.Sleep(RandomSleepTime());
+                SleepManager.Instance.Sleep(RandomSleepTime());
                 if (!IsCanceled)
                 {
                     passExam(this);

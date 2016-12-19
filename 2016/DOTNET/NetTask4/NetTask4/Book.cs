@@ -11,7 +11,7 @@ namespace NetTask4
         private string name;
         public string Name { get { return name; } }
 
-        public string Representation { get { return "Book(" + Name + ")"; } }
+        public string Representation { get { return String.Format("Book({0})", Name); } }
 
         internal Book(string name)
         {

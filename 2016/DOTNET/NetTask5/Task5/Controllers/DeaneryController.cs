@@ -12,6 +12,7 @@ namespace Task5.Controllers
         const int MaxStudentCount = 8;
         const int MaxMarkSleep = 3 * 1000;
 
+        private SleepManager sleepManager;
         private Random rnd;
         private EventWaitHandle waitHandle = null;
         private ExamViewModel examViewModel;
@@ -22,6 +23,7 @@ namespace Task5.Controllers
 
         internal DeaneryController()
         {
+            sleepManager = SleepManager.Instance;
             rnd = new Random();
             waitHandle = new EventWaitHandle(false, EventResetMode.ManualReset);
             examViewModel = new ExamViewModel();
@@ -41,10 +43,7 @@ namespace Task5.Controllers
         {
             students.Clear();
             examViewModel.Clear();
-            examViewModel.StartButtonActive = false;
-            examViewModel.ButtonPauseActive = true;
-            examViewModel.ButtonResumeActive = false;
-            examViewModel.ButtonCancelActive = true;
+            examViewModel.ActivityState = ActivityState.Running;
             studentsCount = rnd.Next(5, MaxStudentCount + 1);
             examViewModel.LabelPassedText = "Passed: 0/" + studentsCount.ToString();
             waitHandle.Reset();
@@ -57,32 +56,27 @@ namespace Task5.Controllers
 
         internal void ActionPause()
         {
-            SleepManager.Instance.PauseAll();
-            examViewModel.ButtonPauseActive = false;
-            examViewModel.ButtonResumeActive = true;
+            sleepManager.PauseAll();
+            examViewModel.ActivityState = ActivityState.Paused;
         }
         internal void ActionResume()
         {
-            SleepManager.Instance.ResumeAll();
-            examViewModel.ButtonPauseActive = true;
-            examViewModel.ButtonResumeActive = false;
+            sleepManager.ResumeAll();
+            examViewModel.ActivityState = ActivityState.Running;
         }
 
         internal void ActionCancel()
         {
             students.ForEach(s => s.IsCanceled = true);
             students.Clear();
-            SleepManager.Instance.CancelAll();
-            SleepManager.Instance.ResumeAll();
+            sleepManager.CancelAll();
+            sleepManager.ResumeAll();
             ResetButtonsState();
         }
 
         private void ResetButtonsState()
         {
-            examViewModel.StartButtonActive = true;
-            examViewModel.ButtonPauseActive = false;
-            examViewModel.ButtonResumeActive = false;
-            examViewModel.ButtonCancelActive = false;
+            examViewModel.ActivityState = ActivityState.Default;
         }
 
         private uint RandomStudentMark()
@@ -97,7 +91,7 @@ namespace Task5.Controllers
             {
                 if (student.IsCanceled) { return; }
                 examViewModel.AddStudent(student);
-                SleepManager.Instance.Sleep(rnd.Next(MaxMarkSleep));
+                sleepManager.Sleep(rnd.Next(MaxMarkSleep));
 
                 if (student.IsCanceled) { return; }
                 student.Mark = RandomStudentMark();

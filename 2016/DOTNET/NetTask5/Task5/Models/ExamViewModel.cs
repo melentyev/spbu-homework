@@ -2,53 +2,44 @@
 
 namespace Task5.Models
 {
+    internal enum ActivityState
+    {
+        Default,
+        Running,
+        Paused
+    }
+
     internal sealed class ExamViewModel
     {
+        
         internal delegate void StateChangedEventHandler(ExamViewModel data);
         internal event StateChangedEventHandler StateChanged;
 
-        private bool startButtonActive = true;
+        private ActivityState activityState;
+        internal ActivityState ActivityState
+        {
+            get { return activityState; }
+            set { activityState = value; StateChanged(this); }
+        }
+
         internal bool StartButtonActive
         {
-            get { return startButtonActive; }
-            set
-            {
-                startButtonActive = value;
-                StateChanged(this);
-            }
+            get { return activityState == ActivityState.Default; }
         }
 
-        private bool buttonPauseActive = false;
         internal bool ButtonPauseActive
         {
-            get { return buttonPauseActive; }
-            set
-            {
-                buttonPauseActive = value;
-                StateChanged(this);
-            }
+            get { return activityState == ActivityState.Running; }
         }
 
-        private bool buttonResumeActive = false;
         internal bool ButtonResumeActive
         {
-            get { return buttonResumeActive; }
-            set
-            {
-                buttonResumeActive = value;
-                StateChanged(this);
-            }
+            get { return activityState == ActivityState.Paused; }
         }
 
-        private bool buttonCancelActive = false;
         internal bool ButtonCancelActive
         {
-            get { return buttonCancelActive; }
-            set
-            {
-                buttonCancelActive = value;
-                StateChanged(this);
-            }
+            get { return activityState == ActivityState.Running || activityState == ActivityState.Paused; }
         }
 
         private string labelPassedText = "";
@@ -79,7 +70,7 @@ namespace Task5.Models
         internal void Clear()
         {
             students.Clear();
-            startButtonActive = true;
+            activityState = ActivityState.Default;
             StateChanged(this);
         }
     }

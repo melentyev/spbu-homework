@@ -17,7 +17,7 @@ namespace NetTask6.Views
             InitializeComponent();
         }
 
-        private void btnOk_Click(object sender, EventArgs e)
+        private void BtnOkClick(object sender, EventArgs e)
         {
             this.Close();
         }

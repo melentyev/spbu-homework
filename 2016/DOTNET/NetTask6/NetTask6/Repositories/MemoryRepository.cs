@@ -40,6 +40,12 @@ namespace NetTask6.Repositories
         }
         public abstract IQueryable<T> TextSearch(string s);
 
+        public async Task DropAll()
+        {
+            await Task.Delay(500);
+            data.Clear();
+        }
+
         protected static Regex WildcardToRegex(string s)
         {
             return new Regex(s.Replace("?", "(.)").Replace("*", "(.*)"));

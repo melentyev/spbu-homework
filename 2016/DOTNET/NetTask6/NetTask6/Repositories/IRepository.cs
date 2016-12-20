@@ -14,5 +14,6 @@ namespace NetTask6.Repositories
         Task<bool> Save(T entity);
         Task<bool> Delete(T entity);
         IQueryable<T> TextSearch(string s);
+        Task DropAll();
     }
 }

@@ -11,8 +11,9 @@ using NetTask6.Helpers;
 
 namespace NetTask6.Views
 {
-    internal partial class CatalogView : Form
+    internal sealed partial class CatalogView : Form
     {
+        internal delegate void RefillDatabaseEventHandler();
         internal delegate void EditFilmEventHandler(List<Movie> selected);
         internal delegate void DeleteFilmEventHandler(List<Movie> selected);
         internal delegate void FindFilmEventHandler();
@@ -21,6 +22,7 @@ namespace NetTask6.Views
         internal delegate void DeleteActorEventHandler(int position);
         internal delegate void SaveMovieEventHandler();
 
+        internal event RefillDatabaseEventHandler RefillDatabase;
         internal event EditFilmEventHandler EditFilm;
         internal event DeleteFilmEventHandler DeleteFilm;
         internal event FindFilmEventHandler FindFilm;
@@ -30,6 +32,8 @@ namespace NetTask6.Views
         internal event SaveMovieEventHandler SaveMovie;
 
         const int moviesInRow = 2;
+
+        EditMovieViewModel editMovieViewModel;
 
         internal ToolStripMenuItem ExitMenuItem { get { return exitToolStripMenuItem; } }
         internal ToolStripMenuItem FindMovieMenuItem { get { return findFilmToolStripMenuItem; } }
@@ -59,6 +63,8 @@ namespace NetTask6.Views
             nameColumn.ReadOnly = true;
             yearColumn.ReadOnly = true;
 
+            editFormYear.SetErrorProvider(editMovieFormErrorProvider);
+
             editFormDirector.SetSource(directorsAutocompleteSource);
             editFormAddActor.SetSource(actorsAutocompleteSource);
 
@@ -69,7 +75,7 @@ namespace NetTask6.Views
             UpdateGridView(data);
             ShowMovieGrid();
 
-            CatalogView_Resize(null, null);
+            OnCatalogViewResize(null, null);
         }
 
         internal void SetGridTitle(string title) { gridTitleLabel.Text = title; }
@@ -86,6 +92,8 @@ namespace NetTask6.Views
 
         internal void ShowMovieEditForm(EditMovieViewModel data)
         {
+            editMovieViewModel = data;
+
             dataGridView1.Hide();
             gridTitleLabel.Hide();
             editMoviePanel.Left = 0;
@@ -114,6 +122,10 @@ namespace NetTask6.Views
             DataGridViewRow currentRow = null;
             var cells = new List<DataGridViewImageCell>();
 
+            foreach (DataGridViewRow row in dataGridView1.Rows)
+            {
+                ((row.Cells[0] as DataGridViewImageCell).Value as Image).Dispose();
+            }
             dataGridView1.Rows.Clear();
 
             data.Movies.ForEach(movie =>
@@ -152,7 +164,7 @@ namespace NetTask6.Views
         internal void SaveEditMovieViewModelState(EditMovieViewModel data, out string directorName, List<string> actorNames)
         {
             data.Name = editFormNameText.Text;
-            data.Year = UInt32.Parse(editFormYear.Text);
+            data.Year = Int32.Parse(editFormYear.Text);
             directorName = editFormDirector.Text;
             for (int i = 0; i < editFormActorsListBox.Items.Count; i++)
             {
@@ -171,12 +183,12 @@ namespace NetTask6.Views
             if (DeleteFilm != null) { DeleteFilm(GetSelectedMovies()); }
         }
 
-        private void editFilmToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnEditFilmToolStripMenuItemClick(object sender, EventArgs e)
         {
             EditFilm(GetSelectedMovies());
         }
 
-        private void findFilmToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnFindFilmToolStripMenuItemClick(object sender, EventArgs e)
         {
             FindFilm();
         }
@@ -192,22 +204,22 @@ namespace NetTask6.Views
             return movies;
         }
 
-        private void editMovieBackBtn_Click(object sender, EventArgs e)
+        private void OnEditMovieBackBtnClick(object sender, EventArgs e)
         {
             if (GoBack != null) { GoBack(); }
         }
 
-        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnAboutToolStripMenuItemClick(object sender, EventArgs e)
         {
             if (AboutOpen != null) { AboutOpen(); }
         }
 
-        private void exitToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnExitToolStripMenuItemClick(object sender, EventArgs e)
         {
-            this.Close();
+            Close();
         }
 
-        private void CatalogView_FormClosing(object sender, FormClosingEventArgs e)
+        private void OnCatalogViewFormClosing(object sender, FormClosingEventArgs e)
         {
             var result = MessageBox.Show("Are you sure?", "Movies", MessageBoxButtons.OKCancel);
             if (result.HasFlag(DialogResult.Cancel))
@@ -216,7 +228,7 @@ namespace NetTask6.Views
             }
         }
 
-        private void uploadMovieBox_Click(object sender, EventArgs e)
+        private void OnUploadMovieBoxClick(object sender, EventArgs e)
         {
             var selectFile = new OpenFileDialog();
             var result = selectFile.ShowDialog();
@@ -224,25 +236,32 @@ namespace NetTask6.Views
             if (!result.HasFlag(DialogResult.Cancel)) {
                 var file = selectFile.FileName;
                 uploadMovieBox.Image = Image.FromFile(file);
+
+                editMovieViewModel.Image = file;
             }
         }
 
-        private void editFormAddActorBtn_Click(object sender, EventArgs e)
+        private void OnEditFormAddActorBtnClick(object sender, EventArgs e)
         {
             //editFormAddActor.Text
         }
 
-        private void editFormDeleteActor_Click(object sender, EventArgs e)
+        private void OnEditFormDeleteActorClick(object sender, EventArgs e)
         {
             if (DeleteActor != null) { DeleteActor(editFormActorsListBox.SelectedIndex); }
         }
 
-        private void editMovieSaveBtn_Click(object sender, EventArgs e)
+        private void OnEditMovieSaveBtnClick(object sender, EventArgs e)
         {
             if (SaveMovie != null) { SaveMovie(); }
         }
 
-        private void CatalogView_Resize(object sender, EventArgs e)
+        private void OnRefillDatabaseToolStripMenuItemClick(object sender, EventArgs e)
+        {
+            if (RefillDatabase != null) { RefillDatabase(); }
+        }
+
+        private void OnCatalogViewResize(object sender, EventArgs e)
         {
             int dgwidth = dataGridView1.Width - dataGridView1.RowHeadersWidth * 2;
             dataGridView1.Columns[0].Width = dgwidth / 3;

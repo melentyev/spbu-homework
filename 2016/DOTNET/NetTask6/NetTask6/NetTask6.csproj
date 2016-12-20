@@ -135,6 +135,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Migrations\201612192058195_init.cs" />
+    <Compile Include="Migrations\201612192058195_init.Designer.cs">
+      <DependentUpon>201612192058195_init.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612192058522_init1.cs" />
+    <Compile Include="Migrations\201612192058522_init1.Designer.cs">
+      <DependentUpon>201612192058522_init1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201612202144228_init2.cs" />
+    <Compile Include="Migrations\201612202144228_init2.Designer.cs">
+      <DependentUpon>201612202144228_init2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\Configuration.cs" />
+    <Compile Include="Repositories\IMovieRepository.cs" />
     <Compile Include="Views\Autocomplete.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -143,15 +157,6 @@
     <Compile Include="Helpers\DefaultDataHelper.cs" />
     <Compile Include="Helpers\GetMoviesAsyncHelper.cs" />
     <Compile Include="Helpers\ImagesHelper.cs" />
-    <Compile Include="Migrations\201612081520380_m1.cs" />
-    <Compile Include="Migrations\201612081520380_m1.Designer.cs">
-      <DependentUpon>201612081520380_m1.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201612081526462_m11.cs" />
-    <Compile Include="Migrations\201612081526462_m11.Designer.cs">
-      <DependentUpon>201612081526462_m11.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Actor.cs" />
     <Compile Include="Models\Director.cs" />
     <Compile Include="Models\EditMovieViewModel.cs" />
@@ -195,11 +200,14 @@
     <Compile Include="Views\YearInput.cs">
       <SubType>Component</SubType>
     </Compile>
-    <EmbeddedResource Include="Migrations\201612081520380_m1.resx">
-      <DependentUpon>201612081520380_m1.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612192058195_init.resx">
+      <DependentUpon>201612192058195_init.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201612081526462_m11.resx">
-      <DependentUpon>201612081526462_m11.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201612192058522_init1.resx">
+      <DependentUpon>201612192058522_init1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201612202144228_init2.resx">
+      <DependentUpon>201612202144228_init2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

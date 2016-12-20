@@ -14,7 +14,7 @@ namespace NetTask6.Views
 {
     internal partial class SearchView : Form
     {
-        internal delegate void UserInputEventHandler(string name, uint year, string director, string actor);
+        internal delegate void UserInputEventHandler(string name, int year, string director, string actor);
         internal delegate void SearchEventHandler();
         internal delegate void ClearEventHandler();
 
@@ -72,7 +72,7 @@ namespace NetTask6.Views
         private void FireUserInput()
         {
             UserInput(searchViewFilmNameEdit.Text,
-                searchViewYearInput.IsValid ? UInt32.Parse(searchViewYearInput.Text) : 0,
+                searchViewYearInput.IsValid ? Int32.Parse(searchViewYearInput.Text) : 0,
                 searchViewDirector.Text, "");
         }
 

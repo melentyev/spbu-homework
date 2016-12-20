@@ -10,24 +10,31 @@ using NetTask6.Controllers;
 
 namespace NetTask6
 {
-    static class Program
+    internal static class Program
     {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
         [STAThread]
-        static void Main()
+        internal static void Main(string[] args)
         {
-            DatabaseContext db = new DatabaseContext();
-            //DatabaseContext db = null;
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            var CatalogController = new CatalogController(db);
-            Application.Run(CatalogController.RenderMainView());
-
-            if (db != null) { db.Dispose(); }
+            if (args.Contains("--nodb"))
+            {
+                var CatalogController = new CatalogController();
+                Application.Run(CatalogController.RenderMainView());
+            }
+            else
+            {
+                using (var db = new DatabaseContext())
+                {
+                    var CatalogController = new CatalogController(db);
+                    Application.Run(CatalogController.RenderMainView());
+                }
+            }
         }
     }
 }

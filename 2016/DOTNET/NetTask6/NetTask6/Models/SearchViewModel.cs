@@ -18,8 +18,8 @@
             set { country = value; Update(); }
         }
 
-        private uint year;
-        internal uint Year
+        private int year;
+        internal int Year
         {
             get { return year; }
             set { year = value; Update(); }

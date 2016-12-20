@@ -117,26 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ApproveDeleteMovie" xml:space="preserve">
-    <value>Вы уверены что хотите удалить фильм "{0}"?</value>
+  <data name="Target" xml:space="preserve">
+    <value>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</value>
   </data>
-  <data name="ApproveDeleteMovieCaption" xml:space="preserve">
-    <value>Подтвердите удаление</value>
-  </data>
-  <data name="GridTitleAllMovies" xml:space="preserve">
-    <value>Все фильмы</value>
-  </data>
-  <data name="GridTitleLoading" xml:space="preserve">
-    <value>Загрузка...</value>
-  </data>
-  <data name="GridTitleSearchResult" xml:space="preserve">
-    <value>Результаты поиска по критерию: {0}</value>
-  </data>
-  <assembly alias="System.Windows.Forms" name="System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
-  <data name="MovieImagePlaceholder" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\Resources\MovieImagePlaceholder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="YearInputInvalid" xml:space="preserve">
-    <value>Введен неверный год (должен быть &gt;= {0} и не в будущем)</value>
+  <data name="DefaultSchema" xml:space="preserve">
+    <value>dbo</value>
   </data>
 </root>

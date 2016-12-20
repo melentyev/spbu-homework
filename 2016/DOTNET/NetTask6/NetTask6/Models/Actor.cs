@@ -7,6 +7,11 @@ namespace NetTask6.Models
 {
     public class Actor
     {
+        public Actor()
+        {
+            this.Movies = new HashSet<Movie>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ActorId { get; set; }

@@ -61,6 +61,51 @@ namespace NetTask6.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Вы уверены что хотите удалить фильм &quot;{0}&quot;?.
+        /// </summary>
+        internal static string ApproveDeleteMovie {
+            get {
+                return ResourceManager.GetString("ApproveDeleteMovie", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Подтвердите удаление.
+        /// </summary>
+        internal static string ApproveDeleteMovieCaption {
+            get {
+                return ResourceManager.GetString("ApproveDeleteMovieCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Все фильмы.
+        /// </summary>
+        internal static string GridTitleAllMovies {
+            get {
+                return ResourceManager.GetString("GridTitleAllMovies", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Загрузка....
+        /// </summary>
+        internal static string GridTitleLoading {
+            get {
+                return ResourceManager.GetString("GridTitleLoading", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Результаты поиска по критерию: {0}.
+        /// </summary>
+        internal static string GridTitleSearchResult {
+            get {
+                return ResourceManager.GetString("GridTitleSearchResult", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap MovieImagePlaceholder {

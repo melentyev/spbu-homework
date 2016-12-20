@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 using NetTask6.Models;
 using NetTask6.Repositories;
@@ -16,24 +14,23 @@ namespace NetTask6.Helpers
             IRepository<Director> directorRepository,
             IRepository<Actor> actorRepository)
         { 
-            var frank = new Director { DirectorId = 1, Name = "Фрэнк Дарабонт" };
-            var nolan = new Director { DirectorId = 2, Name = "Кристофер Нолан" };
-            var spilberg = new Director { DirectorId = 3, Name = "Стивен Спилберг" };
-            var leone = new Director { DirectorId = 4, Name = "Серджио Леоне" };
-            var fincher = new Director { DirectorId = 5, Name = "Дэвид Финчер" };
-            var tkey = new Director { DirectorId = 6, Name = "Тони Кэй" };
-            var besson = new Director { DirectorId = 7, Name = "Люк Бессон" };
+            var frank = new Director { Name = "Фрэнк Дарабонт" };
+            var nolan = new Director { Name = "Кристофер Нолан" };
+            var spilberg = new Director { Name = "Стивен Спилберг" };
+            var leone = new Director { Name = "Серджио Леоне" };
+            var fincher = new Director { Name = "Дэвид Финчер" };
+            var tkey = new Director { Name = "Тони Кэй" };
+            var besson = new Director { Name = "Люк Бессон" };
 
-
-            var robbins = new Actor { ActorId = 1, Name = "Тим Роббинс" };
-            var freeman = new Actor { ActorId = 2, Name = "Морган Фриман" };
-            var hanks = new Actor { ActorId = 3, Name = "Том Хэнкс" };
-            var burns = new Actor { ActorId = 4, Name = "Эдвард Бёрнс" };
-            var deniro = new Actor { ActorId = 5, Name = "Роберт Де Ниро" };
-            var pitt = new Actor { ActorId = 6, Name = "Брэд Питт" };
-            var norton = new Actor { ActorId = 7, Name = "Эдвард Нортон" };
-            var reno = new Actor { ActorId = 8, Name = "Жан Рено" };
-            var oldman = new Actor { ActorId = 9, Name = "Гари Олдман" };
+            var robbins = new Actor { Name = "Тим Роббинс" };
+            var freeman = new Actor { Name = "Морган Фриман" };
+            var hanks = new Actor { Name = "Том Хэнкс" };
+            var burns = new Actor { Name = "Эдвард Бёрнс" };
+            var deniro = new Actor { Name = "Роберт Де Ниро" };
+            var pitt = new Actor { Name = "Брэд Питт" };
+            var norton = new Actor { Name = "Эдвард Нортон" };
+            var reno = new Actor { Name = "Жан Рено" };
+            var oldman = new Actor { Name = "Гари Олдман" };
 
             var movieData = new[] {
                 new { Name = "Побег из Шоушенка", Year = 1994u, Country = "США", Image = "326.jpg",
@@ -65,15 +62,15 @@ namespace NetTask6.Helpers
 
             };
 
+            var imagesBaseDir = Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\DefaultPictures\"));
             for (var i = 0; i < movieData.Length; i++)
             {
                 await movieRepository.Save(new Movie
                 {
                     MovieId = i + 1,
                     Name = movieData[i].Name,
-                    Year = movieData[i].Year,
-                    Image = @"C:\Users\user\Documents\GitHub\spbu-homework\2016\DOTNET\NetTask6\NetTask6\DefaultPictures\" + 
-                        movieData[i].Image,
+                    Year = (int)movieData[i].Year,
+                    Image = imagesBaseDir + movieData[i].Image,
                     Director = movieData[i].Director,
                     Actors = movieData[i].Actors,
                     

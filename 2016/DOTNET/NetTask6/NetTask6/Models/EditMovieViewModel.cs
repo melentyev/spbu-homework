@@ -25,8 +25,8 @@ namespace NetTask6.Models
             set { name = value; Update(); }
         }
 
-        private uint year;
-        internal uint Year
+        private int year;
+        internal int Year
         {
             get { return year; }
             set { year = value; Update(); }

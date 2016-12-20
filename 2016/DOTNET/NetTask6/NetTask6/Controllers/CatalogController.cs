@@ -15,9 +15,6 @@ namespace NetTask6.Controllers
 {
     internal class CatalogController
     {
-        const string StrApproveDeleteMovie = "Вы уверены что хотите удалить фильм \"{0}\"?";
-        const string StrApproveDeleteMovieCaption = "Подтвержедние";
-
         CatalogView catalogView;
         SearchView searchView;
 
@@ -31,32 +28,10 @@ namespace NetTask6.Controllers
 
         GetMoviesAsyncHelper getMovies;
 
-        internal CatalogController(DatabaseContext dbCtx)
+        internal CatalogController(DatabaseContext dbCtx = null)
         {
-            ManualResetEvent ev = new ManualResetEvent(false);
-            if (dbCtx == null)
-            {
-                movieRepository = new MovieMemoryRepository();
-                directorRepository = new DirectorMemoryRepository();
-                actorRepository = new ActorMemoryRepository();
+            InitializeRepositories(dbCtx);
 
-                DefaultDataHelper.FillRepositories(movieRepository, directorRepository, actorRepository)
-                    .ContinueWith((t) => { ev.Set(); });
-            }
-            else
-            {
-                movieRepository = new MovieEFRepository(dbCtx.Movies, dbCtx);
-                directorRepository = new DirectorEFRepository(dbCtx.Directors, dbCtx);
-                actorRepository = new ActorEFRepository(dbCtx.Actors, dbCtx);
-
-                dbCtx.Actors.ToList().ForEach(x => dbCtx.Actors.Remove(x));
-                dbCtx.Directors.ToList().ForEach(x => dbCtx.Directors.Remove(x));
-                dbCtx.Movies.ToList().ForEach(x => dbCtx.Movies.Remove(x));
-
-                DefaultDataHelper.FillRepositories(movieRepository, directorRepository, actorRepository)
-                    .ContinueWith((t) => { ev.Set(); });
-            }
-            ev.WaitOne();
             moviesGridViewModel = new MoviesGridViewModel();
             searchViewModel = new SearchViewModel();
             editMovieViewModel = new EditMovieViewModel();
@@ -64,13 +39,43 @@ namespace NetTask6.Controllers
             getMovies = new GetMoviesAsyncHelper(movieRepository, directorRepository, actorRepository);
         }
 
+        private void InitializeRepositories(DatabaseContext dbCtx)
+        {
+            if (dbCtx == null)
+            {
+                movieRepository = new MovieMemoryRepository();
+                directorRepository = new DirectorMemoryRepository();
+                actorRepository = new ActorMemoryRepository();
+            }
+            else
+            {
+                movieRepository = new MovieEFRepository(dbCtx.Movies, dbCtx);
+                directorRepository = new DirectorEFRepository(dbCtx.Directors, dbCtx);
+                actorRepository = new ActorEFRepository(dbCtx.Actors, dbCtx);
+            }
+        }
+
         internal Form RenderMainView()
         {
-            initSearchView();
+            InitSearchView();
 
             catalogView = new CatalogView(moviesGridViewModel, 
                 new DirectorsAutocompleteSource(directorRepository),
                 new ActorsAutocompleteSource(actorRepository));
+
+            catalogView.RefillDatabase += (async () => 
+            {
+                await actorRepository.DropAll();
+                await directorRepository.DropAll();
+                await movieRepository.DropAll();
+
+                await DefaultDataHelper.FillRepositories(movieRepository, directorRepository, actorRepository);
+
+                GetMovies();
+            });
+
+            catalogView.SaveMovie += SaveMovie;
+            catalogView.DeleteFilm += DeleteMovie;
 
             catalogView.EditFilm += (List<Movie> selected) =>
             {
@@ -87,48 +92,22 @@ namespace NetTask6.Controllers
                 }
             };
 
-            catalogView.SaveMovie += async () =>
-            {
-                catalogView.SetEnabledState(false);
-
-                var id = editMovieViewModel.MovieId;
-                Movie model = (await movieRepository.ToArrayAsync(movieRepository.GetAll().Where(x => x.MovieId == id)))[0];
-
-                string directorName;
-                List<string> actorNames = new List<string>();
-                catalogView.SaveEditMovieViewModelState(editMovieViewModel, out directorName, actorNames);
-
-                Director[] existing = await directorRepository.ToArrayAsync(
-                    directorRepository.GetAll().Where(x => x.Name == directorName));
-
-                model.Name = editMovieViewModel.Name;
-                model.Year = editMovieViewModel.Year;
-                model.Director = existing.Length == 0 ? new Director() { Name = directorName } : existing[0];
-                model.Actors = editMovieViewModel.Actors;
-
-                if (model.Director.DirectorId < 1)
-                {
-                    await directorRepository.Save(model.Director);
-                }
-
-                await movieRepository.Save(model);
-
-                catalogView.SetEnabledState(true);
-            };
-
             catalogView.FindFilm += (() => 
             {
                 if (searchView.IsDisposed)
                 {
-                    initSearchView();
+                    InitSearchView();
                 }
                 searchView.Show();
+                searchView.Activate();
+                searchView.Left = catalogView.Left + catalogView.Width / 2 - searchView.Width / 2;
                 catalogView.FindMovieMenuItem.Checked = true;
                 catalogView.ExitMenuItem.Enabled = false;
             });
 
             catalogView.GoBack += (() =>
             {
+                GetMovies();
                 catalogView.ShowMovieGrid();
             });
 
@@ -136,27 +115,6 @@ namespace NetTask6.Controllers
             {
                 var aboutView = new AboutView();
                 aboutView.ShowDialog();
-            });
-
-            catalogView.DeleteFilm += (async (List<Movie> selected) =>
-            {
-                bool confirmed = true;
-                for (int i = 0; i < selected.Count; i++)
-                {
-                    var name = selected[i].Name;
-                    var res = MessageBox.Show(
-                        String.Format(StrApproveDeleteMovie, selected[i].Name),
-                        StrApproveDeleteMovieCaption, MessageBoxButtons.YesNo);
-                    if (res.HasFlag(DialogResult.No)) {
-                        confirmed = false;
-                        break;
-                    }
-                }
-                if (confirmed)
-                {
-                    await Task.WhenAll(selected.Select(x => movieRepository.Delete(x)).ToArray());
-                    GetMovies(null, null, null);
-                }
             });
 
             catalogView.DeleteActor += ((position) =>
@@ -167,14 +125,65 @@ namespace NetTask6.Controllers
             getMovies.OnStarted += (() => 
             {
                 catalogView.SetGridStatus(false);
-                catalogView.SetGridTitle("Загрузка...");
+                catalogView.SetGridTitle(Properties.Resources.GridTitleLoading);
             });
 
-            GetMovies(null, null, null);
+            GetMovies();
             return catalogView;
         }
 
-        private void initSearchView()
+        private async void SaveMovie()
+        {
+            catalogView.SetEnabledState(false);
+
+            var id = editMovieViewModel.MovieId;
+            Movie model = (await movieRepository.ToArrayAsync(movieRepository.GetAll().Where(x => x.MovieId == id)))[0];
+
+            string directorName;
+            List<string> actorNames = new List<string>();
+            catalogView.SaveEditMovieViewModelState(editMovieViewModel, out directorName, actorNames);
+
+            Director[] existing = await directorRepository.ToArrayAsync(
+                directorRepository.GetAll().Where(x => x.Name == directorName));
+
+            model.Name = editMovieViewModel.Name;
+            model.Year = editMovieViewModel.Year;
+            model.Director = existing.Length == 0 ? new Director() { Name = directorName } : existing[0];
+            model.Actors = editMovieViewModel.Actors;
+
+            if (model.Director.DirectorId < 1)
+            {
+                await directorRepository.Save(model.Director);
+            }
+
+            await movieRepository.Save(model);
+
+            catalogView.SetEnabledState(true);
+        }
+
+        private async void DeleteMovie(List<Movie> selected)
+        {
+            bool confirmed = true;
+            for (int i = 0; i<selected.Count; i++)
+            {
+                var name = selected[i].Name;
+                var res = MessageBox.Show(
+                    String.Format(Properties.Resources.ApproveDeleteMovie, selected[i].Name),
+                    Properties.Resources.ApproveDeleteMovieCaption, MessageBoxButtons.YesNo);
+                if (res.HasFlag(DialogResult.No))
+                {
+                    confirmed = false;
+                    break;
+                }
+            }
+            if (confirmed)
+            {
+                await Task.WhenAll(selected.Select(x => movieRepository.Delete(x)).ToArray());
+                GetMovies();
+            }
+        }
+
+        private void InitSearchView()
         {
             searchView = new SearchView(searchViewModel);
             searchView.Visible = false;
@@ -192,7 +201,7 @@ namespace NetTask6.Controllers
                 string name = searchViewModel.Name;
                 string director = searchViewModel.Director;
                 string actor = searchViewModel.Actor;
-                GetMovies(name, director, actor);
+                GetMovies(name, searchViewModel.Year, searchViewModel.Country, director, actor);
                 catalogView.Activate();
             });
 
@@ -210,10 +219,17 @@ namespace NetTask6.Controllers
             });
         }
 
-        private void GetMovies(string movieName, string director, string actor)
+        private void GetMovies(
+            string movieName = null,
+            int year = 0, 
+            string country = null, 
+            string director = null, 
+            string actor = null)
         {
             GetMoviesAsyncHelper.OnCompletedEventHandler onCompletedHandler = null;
             var isEmptySearch = String.IsNullOrEmpty(movieName)
+                && year == 0
+                && String.IsNullOrEmpty(country)
                 && String.IsNullOrEmpty(director)
                 && String.IsNullOrEmpty(actor);
 
@@ -223,12 +239,14 @@ namespace NetTask6.Controllers
                 catalogView.Invoke(new Action(() =>
                 {
                     moviesGridViewModel.Movies = movies;
-                    catalogView.SetGridTitle(isEmptySearch ? "Все фильмы" : "Результаты поиска по критерию: " + movieName);
+                    catalogView.SetGridTitle(isEmptySearch ? 
+                        Properties.Resources.GridTitleAllMovies : 
+                        String.Format(Properties.Resources.GridTitleSearchResult, movieName));
                     catalogView.SetGridStatus(true);
                 }));
             });
             getMovies.OnCompleted += onCompletedHandler;
-            getMovies.GetMovies(movieName, director, actor);
+            getMovies.GetMovies(movieName, year, country, director, actor);
         }
     }
 }

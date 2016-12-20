@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Entity;
-using System.Data.Objects.SqlClient;
+using System.Data.Entity.SqlServer;
 
 using NetTask6.Models;
 
@@ -23,6 +23,7 @@ namespace NetTask6.Repositories
         }
         public override IQueryable<Director> TextSearch(string s)
         {
+            s = WildcardToPattern(s);
             return data.Where(x => SqlFunctions.PatIndex(s, x.Name) > 0);
         }
     }

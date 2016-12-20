@@ -41,6 +41,12 @@ namespace NetTask6.Repositories
         }
         public abstract IQueryable<T> TextSearch(string s);
 
+        public async Task DropAll()
+        {
+            data.RemoveRange(data);
+            await dbCtx.SaveChangesAsync();
+        }
+
         protected static string WildcardToPattern(string s)
         {
             return s.Replace("?", "_").Replace("*", "%");

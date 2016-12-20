@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Forms;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -25,7 +26,7 @@ namespace NetTask6.Helpers
             actorRepository = _actorRepository;
         }
 
-        internal void GetMovies(string movieName, string director, string actor)
+        internal void GetMovies(string movieName, int year, string country, string director, string actor)
         {
             Started();
             Task.Run(async () =>
@@ -34,6 +35,10 @@ namespace NetTask6.Helpers
                 {
                     var movies = String.IsNullOrEmpty(movieName) ? movieRepository.GetAll()
                         : movieRepository.TextSearch(movieName);
+                    if (year > 0)
+                    {
+                        movies = movies.Where(movie => movie.Year == year);
+                    }
 
                     if (!String.IsNullOrEmpty(director))
                     {
@@ -52,7 +57,7 @@ namespace NetTask6.Helpers
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
+                    MessageBox.Show(e.Message);
                 }
             });
         }

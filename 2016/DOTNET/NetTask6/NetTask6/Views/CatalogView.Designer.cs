@@ -40,12 +40,9 @@
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editMoviePanel = new System.Windows.Forms.Panel();
-            this.editFormYear = new NetTask6.Views.YearInput();
             this.editFormActorsListBox = new System.Windows.Forms.ListBox();
             this.editFormDeleteActor = new System.Windows.Forms.Button();
             this.editFormAddActorBtn = new System.Windows.Forms.Button();
-            this.editFormAddActor = new NetTask6.Views.Autocomplete();
-            this.editFormDirector = new NetTask6.Views.Autocomplete();
             this.label4 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -58,6 +55,10 @@
             this.gridTitleLabel = new System.Windows.Forms.Label();
             this.editMovieFormHelpProvider = new System.Windows.Forms.HelpProvider();
             this.helpProvider1 = new System.Windows.Forms.HelpProvider();
+            this.editFormYear = new NetTask6.Views.YearInput();
+            this.editFormAddActor = new NetTask6.Views.Autocomplete();
+            this.editFormDirector = new NetTask6.Views.Autocomplete();
+            this.refillDatabaseToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.menuStrip1.SuspendLayout();
             this.editMoviePanel.SuspendLayout();
@@ -97,6 +98,7 @@
             // fileToolStripMenuItem
             // 
             this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.refillDatabaseToolStripMenuItem,
             this.exitToolStripMenuItem});
             this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
             this.fileToolStripMenuItem.Size = new System.Drawing.Size(44, 24);
@@ -105,9 +107,9 @@
             // exitToolStripMenuItem
             // 
             this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-            this.exitToolStripMenuItem.Size = new System.Drawing.Size(108, 26);
+            this.exitToolStripMenuItem.Size = new System.Drawing.Size(185, 26);
             this.exitToolStripMenuItem.Text = "E&xit";
-            this.exitToolStripMenuItem.Click += new System.EventHandler(this.exitToolStripMenuItem_Click);
+            this.exitToolStripMenuItem.Click += new System.EventHandler(this.OnExitToolStripMenuItemClick);
             // 
             // editToolStripMenuItem
             // 
@@ -122,23 +124,23 @@
             // editFilmToolStripMenuItem
             // 
             this.editFilmToolStripMenuItem.Name = "editFilmToolStripMenuItem";
-            this.editFilmToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.editFilmToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.editFilmToolStripMenuItem.Text = "&Edit movie";
-            this.editFilmToolStripMenuItem.Click += new System.EventHandler(this.editFilmToolStripMenuItem_Click);
+            this.editFilmToolStripMenuItem.Click += new System.EventHandler(this.OnEditFilmToolStripMenuItemClick);
             // 
             // deleteFilmToolStripMenuItem
             // 
             this.deleteFilmToolStripMenuItem.Name = "deleteFilmToolStripMenuItem";
-            this.deleteFilmToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.deleteFilmToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.deleteFilmToolStripMenuItem.Text = "Delete movie";
             this.deleteFilmToolStripMenuItem.Click += new System.EventHandler(this.deleteFilmToolStripMenuItem_Click);
             // 
             // findFilmToolStripMenuItem
             // 
             this.findFilmToolStripMenuItem.Name = "findFilmToolStripMenuItem";
-            this.findFilmToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.findFilmToolStripMenuItem.Size = new System.Drawing.Size(173, 26);
             this.findFilmToolStripMenuItem.Text = "&Find movie...";
-            this.findFilmToolStripMenuItem.Click += new System.EventHandler(this.findFilmToolStripMenuItem_Click);
+            this.findFilmToolStripMenuItem.Click += new System.EventHandler(this.OnFindFilmToolStripMenuItemClick);
             // 
             // helpToolStripMenuItem
             // 
@@ -153,7 +155,7 @@
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
             this.aboutToolStripMenuItem.Size = new System.Drawing.Size(134, 26);
             this.aboutToolStripMenuItem.Text = "About...";
-            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
+            this.aboutToolStripMenuItem.Click += new System.EventHandler(this.OnAboutToolStripMenuItemClick);
             // 
             // editMoviePanel
             // 
@@ -179,15 +181,6 @@
             this.editMoviePanel.Size = new System.Drawing.Size(619, 409);
             this.editMoviePanel.TabIndex = 2;
             // 
-            // editFormYear
-            // 
-            this.editFormYear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.editFormYear.Location = new System.Drawing.Point(311, 110);
-            this.editFormYear.Name = "editFormYear";
-            this.editFormYear.Size = new System.Drawing.Size(270, 22);
-            this.editFormYear.TabIndex = 18;
-            // 
             // editFormActorsListBox
             // 
             this.editFormActorsListBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
@@ -209,7 +202,7 @@
             this.editFormDeleteActor.TabIndex = 16;
             this.editFormDeleteActor.Text = "Удалить";
             this.editFormDeleteActor.UseVisualStyleBackColor = true;
-            this.editFormDeleteActor.Click += new System.EventHandler(this.editFormDeleteActor_Click);
+            this.editFormDeleteActor.Click += new System.EventHandler(this.OnEditFormDeleteActorClick);
             // 
             // editFormAddActorBtn
             // 
@@ -220,27 +213,7 @@
             this.editFormAddActorBtn.TabIndex = 15;
             this.editFormAddActorBtn.Text = "+";
             this.editFormAddActorBtn.UseVisualStyleBackColor = true;
-            this.editFormAddActorBtn.Click += new System.EventHandler(this.editFormAddActorBtn_Click);
-            // 
-            // editFormAddActor
-            // 
-            this.editFormAddActor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.editFormAddActor.FormattingEnabled = true;
-            this.editFormAddActor.Location = new System.Drawing.Point(310, 237);
-            this.editFormAddActor.Name = "editFormAddActor";
-            this.editFormAddActor.Size = new System.Drawing.Size(211, 24);
-            this.editFormAddActor.TabIndex = 14;
-            // 
-            // editFormDirector
-            // 
-            this.editFormDirector.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.editFormDirector.FormattingEnabled = true;
-            this.editFormDirector.Location = new System.Drawing.Point(310, 163);
-            this.editFormDirector.Name = "editFormDirector";
-            this.editFormDirector.Size = new System.Drawing.Size(271, 24);
-            this.editFormDirector.TabIndex = 13;
+            this.editFormAddActorBtn.Click += new System.EventHandler(this.OnEditFormAddActorBtnClick);
             // 
             // label4
             // 
@@ -277,7 +250,7 @@
             this.uploadMovieBox.Size = new System.Drawing.Size(301, 403);
             this.uploadMovieBox.TabIndex = 4;
             this.uploadMovieBox.TabStop = false;
-            this.uploadMovieBox.Click += new System.EventHandler(this.uploadMovieBox_Click);
+            this.uploadMovieBox.Click += new System.EventHandler(this.OnUploadMovieBoxClick);
             // 
             // label1
             // 
@@ -296,7 +269,7 @@
             this.editMovieBackBtn.TabIndex = 2;
             this.editMovieBackBtn.Text = "<< Назад к списку";
             this.editMovieBackBtn.UseVisualStyleBackColor = true;
-            this.editMovieBackBtn.Click += new System.EventHandler(this.editMovieBackBtn_Click);
+            this.editMovieBackBtn.Click += new System.EventHandler(this.OnEditMovieBackBtnClick);
             // 
             // editFormNameText
             // 
@@ -316,7 +289,7 @@
             this.editMovieSaveBtn.TabIndex = 0;
             this.editMovieSaveBtn.Text = "Сохранить";
             this.editMovieSaveBtn.UseVisualStyleBackColor = true;
-            this.editMovieSaveBtn.Click += new System.EventHandler(this.editMovieSaveBtn_Click);
+            this.editMovieSaveBtn.Click += new System.EventHandler(this.OnEditMovieSaveBtnClick);
             // 
             // editMovieFormErrorProvider
             // 
@@ -331,6 +304,42 @@
             this.gridTitleLabel.TabIndex = 3;
             this.gridTitleLabel.Text = "Все фильмы";
             // 
+            // editFormYear
+            // 
+            this.editFormYear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.editFormYear.Location = new System.Drawing.Point(311, 110);
+            this.editFormYear.Name = "editFormYear";
+            this.editFormYear.Size = new System.Drawing.Size(270, 22);
+            this.editFormYear.TabIndex = 18;
+            // 
+            // editFormAddActor
+            // 
+            this.editFormAddActor.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.editFormAddActor.FormattingEnabled = true;
+            this.editFormAddActor.Location = new System.Drawing.Point(310, 237);
+            this.editFormAddActor.Name = "editFormAddActor";
+            this.editFormAddActor.Size = new System.Drawing.Size(211, 24);
+            this.editFormAddActor.TabIndex = 14;
+            // 
+            // editFormDirector
+            // 
+            this.editFormDirector.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.editFormDirector.FormattingEnabled = true;
+            this.editFormDirector.Location = new System.Drawing.Point(310, 163);
+            this.editFormDirector.Name = "editFormDirector";
+            this.editFormDirector.Size = new System.Drawing.Size(271, 24);
+            this.editFormDirector.TabIndex = 13;
+            // 
+            // refillDatabaseToolStripMenuItem
+            // 
+            this.refillDatabaseToolStripMenuItem.Name = "refillDatabaseToolStripMenuItem";
+            this.refillDatabaseToolStripMenuItem.Size = new System.Drawing.Size(185, 26);
+            this.refillDatabaseToolStripMenuItem.Text = "Refill Database";
+            this.refillDatabaseToolStripMenuItem.Click += new System.EventHandler(this.OnRefillDatabaseToolStripMenuItemClick);
+            // 
             // CatalogView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -343,8 +352,8 @@
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "CatalogView";
             this.Text = "Movies";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.CatalogView_FormClosing);
-            this.Resize += new System.EventHandler(this.CatalogView_Resize);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.OnCatalogViewFormClosing);
+            this.Resize += new System.EventHandler(this.OnCatalogViewResize);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
@@ -388,6 +397,7 @@
         private System.Windows.Forms.HelpProvider editMovieFormHelpProvider;
         private YearInput editFormYear;
         private System.Windows.Forms.HelpProvider helpProvider1;
+        private System.Windows.Forms.ToolStripMenuItem refillDatabaseToolStripMenuItem;
     }
 }
 

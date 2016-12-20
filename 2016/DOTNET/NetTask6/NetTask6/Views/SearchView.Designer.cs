@@ -106,8 +106,7 @@
             // 
             // searchFormBtnSearch
             // 
-            this.searchFormBtnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.searchFormBtnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.searchFormBtnSearch.Location = new System.Drawing.Point(206, 346);
             this.searchFormBtnSearch.Name = "searchFormBtnSearch";
@@ -119,8 +118,7 @@
             // 
             // searchFormBtnClear
             // 
-            this.searchFormBtnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.searchFormBtnClear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.searchFormBtnClear.Location = new System.Drawing.Point(97, 346);
             this.searchFormBtnClear.Name = "searchFormBtnClear";

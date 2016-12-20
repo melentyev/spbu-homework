@@ -6,7 +6,7 @@ using NetTask6.Models;
 
 namespace NetTask6.Repositories
 {
-    internal class DirectorMemoryRepository : MemoryRepository<Director>
+    internal sealed class DirectorMemoryRepository : MemoryRepository<Director>
     {
         public override IQueryable<Director> TextSearch(string s)
         {

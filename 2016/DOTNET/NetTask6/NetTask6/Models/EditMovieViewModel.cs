@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetTask6.Models
 {
-    class EditMovieViewModel
+    internal sealed class EditMovieViewModel
     {
         internal delegate void ChangedEventHandler(EditMovieViewModel data);
         internal event ChangedEventHandler Changed;

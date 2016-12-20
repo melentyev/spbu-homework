@@ -12,7 +12,7 @@ using NetTask6.Services;
 
 namespace NetTask6.Controllers
 {
-    internal class CatalogController
+    internal sealed class CatalogController
     {
         CatalogView catalogView;
         SearchView searchView;

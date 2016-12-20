@@ -8,7 +8,7 @@ using NetTask6.Models;
 
 namespace NetTask6.Repositories
 {
-    class MovieEFRepository : EFRepository<Movie>, IMovieRepository
+    internal sealed class MovieEFRepository : EFRepository<Movie>, IMovieRepository
     {
         public MovieEFRepository(DbSet<Movie> dbSet, DatabaseContext ctx)
             : base(dbSet, ctx) {}

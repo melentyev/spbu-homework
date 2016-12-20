@@ -7,7 +7,7 @@ using NetTask6.Repositories;
 
 namespace NetTask6.Helpers
 {
-    class DefaultDataHelper
+    internal sealed class DefaultDataHelper
     {
         internal static async Task FillRepositories(
             IRepository<Movie> movieRepository,

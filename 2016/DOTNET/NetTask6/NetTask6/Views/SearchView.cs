@@ -12,7 +12,7 @@ using NetTask6.Models;
 
 namespace NetTask6.Views
 {
-    internal partial class SearchView : Form
+    internal sealed partial class SearchView : Form
     {
         internal delegate void UserInputEventHandler(string name, int year, string director, string actor);
         internal delegate void SearchEventHandler();

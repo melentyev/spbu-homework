@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetTask6.Helpers
 {
-    class AsyncHelper<T>
+    internal class AsyncHelper<T>
     {
         internal delegate void OnStartedEventHandler();
         internal delegate void OnCompletedEventHandler(T result);

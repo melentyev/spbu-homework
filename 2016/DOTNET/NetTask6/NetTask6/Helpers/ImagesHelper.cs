@@ -3,7 +3,7 @@ using System.Drawing;
 
 namespace NetTask6.Helpers
 {
-    static class ImagesHelper
+    internal static class ImagesHelper
     {
         internal static Image FromFile(string path)
         {

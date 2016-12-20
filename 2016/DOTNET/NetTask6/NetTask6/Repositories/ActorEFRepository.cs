@@ -7,7 +7,7 @@ using NetTask6.Models;
 
 namespace NetTask6.Repositories
 {
-    class ActorEFRepository : EFRepository<Actor>
+    internal sealed class ActorEFRepository : EFRepository<Actor>
     {
         public ActorEFRepository(DbSet<Actor> dbSet, DatabaseContext ctx)
             : base(dbSet, ctx) { }

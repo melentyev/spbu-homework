@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace NetTask6.Views
 {
-    public partial class AboutView : Form
+    internal sealed partial class AboutView : Form
     {
         public AboutView()
         {

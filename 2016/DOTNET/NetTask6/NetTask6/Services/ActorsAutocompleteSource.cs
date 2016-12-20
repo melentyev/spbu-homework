@@ -10,7 +10,7 @@ using NetTask6.Repositories;
 
 namespace NetTask6.Services
 {
-    class ActorsAutocompleteSource: IAutocompleteSource
+    internal sealed class ActorsAutocompleteSource: IAutocompleteSource
     {
         IRepository<Actor> repository;
         internal ActorsAutocompleteSource(IRepository<Actor> repo)

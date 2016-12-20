@@ -1,6 +1,6 @@
 ﻿namespace NetTask6.Models
 {
-    class SearchViewModel
+    internal sealed class SearchViewModel
     {
         internal delegate void ChangedEventHandler(SearchViewModel data);
         internal event ChangedEventHandler Changed;

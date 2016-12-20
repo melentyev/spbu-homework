@@ -10,7 +10,7 @@ using NetTask6.Repositories;
 
 namespace NetTask6.Helpers
 {
-    class GetMoviesAsyncHelper: AsyncHelper<List<Movie> >
+    internal sealed class GetMoviesAsyncHelper: AsyncHelper<List<Movie> >
     {
         IRepository<Movie> movieRepository;
         IRepository<Director> directorRepository;

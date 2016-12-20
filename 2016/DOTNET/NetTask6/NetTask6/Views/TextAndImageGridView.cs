@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace NetTask6.Views
 {
-    public class TextAndImageColumn : DataGridViewTextBoxColumn
+    internal class TextAndImageColumn : DataGridViewTextBoxColumn
     {
         private Image imageValue;
         private Size imageSize;

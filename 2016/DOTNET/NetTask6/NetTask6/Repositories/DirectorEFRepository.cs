@@ -7,7 +7,7 @@ using NetTask6.Models;
 
 namespace NetTask6.Repositories
 {
-    class DirectorEFRepository: EFRepository<Director>
+    internal sealed class DirectorEFRepository: EFRepository<Director>
     {
         public DirectorEFRepository(DbSet<Director> dbSet, DatabaseContext ctx)
             : base(dbSet, ctx) { }

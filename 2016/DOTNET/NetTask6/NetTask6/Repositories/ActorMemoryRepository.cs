@@ -6,7 +6,7 @@ using NetTask6.Models;
 
 namespace NetTask6.Repositories
 {
-    internal class ActorMemoryRepository : MemoryRepository<Actor>
+    internal sealed class ActorMemoryRepository : MemoryRepository<Actor>
     {
         public override IQueryable<Actor> TextSearch(string s)
         {

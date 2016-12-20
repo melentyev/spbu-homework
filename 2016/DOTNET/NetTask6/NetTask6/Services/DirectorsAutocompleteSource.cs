@@ -9,7 +9,7 @@ using NetTask6.Repositories;
 
 namespace NetTask6.Services
 {
-    class DirectorsAutocompleteSource: IAutocompleteSource
+    internal sealed class DirectorsAutocompleteSource: IAutocompleteSource
     {
         IRepository<Director> repository;
         internal DirectorsAutocompleteSource(IRepository<Director> repo)

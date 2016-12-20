@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace NetTask6.Models
 {
-    internal class MoviesGridViewModel
+    internal sealed class MoviesGridViewModel
     {
         internal delegate void ChangedEventHandler(MoviesGridViewModel data);
         internal event ChangedEventHandler Changed;

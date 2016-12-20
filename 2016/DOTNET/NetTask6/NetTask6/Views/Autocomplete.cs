@@ -17,9 +17,8 @@ namespace NetTask6.Views
         private IAutocompleteSource source;
         public Autocomplete()
         {
-        }
-         /*   var combobox = this;
-            TextChanged += (sender, args) =>
+            var combobox = this;
+            KeyPress += (sender, args) =>
             {
                 if (source == null) { return; }
                 var txt = combobox.Text;
@@ -27,10 +26,8 @@ namespace NetTask6.Views
                     var list = listTaks.Result;
                     combobox.Invoke(new Action(() => { 
                         if (list.Count() > 0) {
-                            if (combobox.DataSource == null || !((List<string>)combobox.DataSource).SequenceEqual(list)) { 
-                                combobox.DataSource = list.ToList();
-                            }
-                            //comboBox1.SelectedIndex = 0;
+                            combobox.Items.Clear();
+                            combobox.Items.AddRange(list);
                             var sText = combobox.Items[0].ToString();
                             combobox.SelectionStart = txt.Length;
                             combobox.SelectionLength = sText.Length - txt.Length;
@@ -61,10 +58,11 @@ namespace NetTask6.Views
                             combobox.Text = combobox.Text.Substring(0, sStart);
                         }
                     }
+                    e.SuppressKeyPress = true;
                     e.Handled = true;
                 }
             };
-        }*/
+        }
         public void SetSource(IAutocompleteSource src) { source = src; }
     }
 }

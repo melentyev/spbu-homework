@@ -62,7 +62,8 @@
             this.searchViewFilmNameEdit.Name = "searchViewFilmNameEdit";
             this.searchViewFilmNameEdit.Size = new System.Drawing.Size(278, 22);
             this.searchViewFilmNameEdit.TabIndex = 1;
-            this.searchViewFilmNameEdit.TextChanged += new System.EventHandler(this.searchViewFilmNameEdit_TextChanged);
+            this.searchViewFilmNameEdit.TextChanged += new System.EventHandler(this.OnSearchViewFilmNameEditTextChanged);
+            this.searchViewFilmNameEdit.KeyUp += new System.Windows.Forms.KeyEventHandler(this.OnSearchViewKeyUp);
             // 
             // label2
             // 
@@ -81,7 +82,7 @@
             this.searchViewDirector.Location = new System.Drawing.Point(13, 179);
             this.searchViewDirector.Name = "searchViewDirector";
             this.searchViewDirector.Size = new System.Drawing.Size(278, 24);
-            this.searchViewDirector.TabIndex = 3;
+            this.searchViewDirector.TabIndex = 4;
             this.searchViewDirector.TextChanged += new System.EventHandler(this.searchViewDirector_TextChanged);
             // 
             // searchViewActor
@@ -93,7 +94,7 @@
             this.searchViewActor.Name = "searchViewActor";
             this.searchViewActor.Size = new System.Drawing.Size(278, 24);
             this.searchViewActor.TabIndex = 5;
-            this.searchViewActor.TextChanged += new System.EventHandler(this.searchViewActor_TextChanged);
+            this.searchViewActor.TextChanged += new System.EventHandler(this.OnSearchViewActorTextChanged);
             // 
             // label3
             // 
@@ -111,10 +112,10 @@
             this.searchFormBtnSearch.Location = new System.Drawing.Point(206, 346);
             this.searchFormBtnSearch.Name = "searchFormBtnSearch";
             this.searchFormBtnSearch.Size = new System.Drawing.Size(99, 23);
-            this.searchFormBtnSearch.TabIndex = 6;
+            this.searchFormBtnSearch.TabIndex = 7;
             this.searchFormBtnSearch.Text = "Поиск";
             this.searchFormBtnSearch.UseVisualStyleBackColor = true;
-            this.searchFormBtnSearch.Click += new System.EventHandler(this.searchFormBtnSearch_Click);
+            this.searchFormBtnSearch.Click += new System.EventHandler(this.OnSearchFormBtnSearchClick);
             // 
             // searchFormBtnClear
             // 
@@ -123,10 +124,10 @@
             this.searchFormBtnClear.Location = new System.Drawing.Point(97, 346);
             this.searchFormBtnClear.Name = "searchFormBtnClear";
             this.searchFormBtnClear.Size = new System.Drawing.Size(101, 23);
-            this.searchFormBtnClear.TabIndex = 7;
+            this.searchFormBtnClear.TabIndex = 6;
             this.searchFormBtnClear.Text = "Очистить";
             this.searchFormBtnClear.UseVisualStyleBackColor = true;
-            this.searchFormBtnClear.Click += new System.EventHandler(this.searchFormBtnClear_Click);
+            this.searchFormBtnClear.Click += new System.EventHandler(this.OnSearchFormBtnClearClick);
             // 
             // searchMovieFormErrorProvider
             // 
@@ -148,8 +149,8 @@
             this.searchViewCountryInput.Location = new System.Drawing.Point(12, 81);
             this.searchViewCountryInput.Name = "searchViewCountryInput";
             this.searchViewCountryInput.Size = new System.Drawing.Size(278, 22);
-            this.searchViewCountryInput.TabIndex = 10;
-            this.searchViewCountryInput.TextChanged += new System.EventHandler(this.searchViewCountryInput_TextChanged);
+            this.searchViewCountryInput.TabIndex = 2;
+            this.searchViewCountryInput.TextChanged += new System.EventHandler(this.OnSearchViewCountryInputTextChanged);
             // 
             // label5
             // 
@@ -167,8 +168,8 @@
             this.searchViewYearInput.Location = new System.Drawing.Point(12, 129);
             this.searchViewYearInput.Name = "searchViewYearInput";
             this.searchViewYearInput.Size = new System.Drawing.Size(279, 22);
-            this.searchViewYearInput.TabIndex = 8;
-            this.searchViewYearInput.TextChanged += new System.EventHandler(this.searchViewYearInput_TextChanged);
+            this.searchViewYearInput.TabIndex = 3;
+            this.searchViewYearInput.TextChanged += new System.EventHandler(this.OnSearchViewYearInputTextChanged);
             // 
             // SearchView
             // 

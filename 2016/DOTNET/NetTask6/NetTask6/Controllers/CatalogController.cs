@@ -92,6 +92,22 @@ namespace NetTask6.Controllers
                 }
             };
 
+            catalogView.AddMovieActor += (async (name) =>
+            {
+                var query = actorRepository.GetAll().Where(actor => actor.Name == name);
+                var foundActor = (await actorRepository.ToListAsync(query)).FirstOrDefault();
+                if (foundActor != null)
+                {
+                    editMovieViewModel.Actors.Add(foundActor);
+                }
+                else
+                {
+                    var newActor = new Actor() { Name = name };
+                    await actorRepository.Save(newActor);
+                    editMovieViewModel.Actors.Add(newActor);
+                }
+            });
+
             catalogView.FindFilm += (() => 
             {
                 if (searchView.IsDisposed)

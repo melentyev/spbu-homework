@@ -49,17 +49,17 @@ namespace NetTask6.Views
             }
         }
 
-        private void searchFormBtnClear_Click(object sender, EventArgs e)
+        private void OnSearchFormBtnClearClick(object sender, EventArgs e)
         {
             if (Clear != null) { Clear(); }
         }
 
-        private void searchFormBtnSearch_Click(object sender, EventArgs e)
+        private void OnSearchFormBtnSearchClick(object sender, EventArgs e)
         {
             if (Search != null) { Search(); }
         }
 
-        private void searchViewFilmNameEdit_TextChanged(object sender, EventArgs e)
+        private void OnSearchViewFilmNameEditTextChanged(object sender, EventArgs e)
         {
             FireUserInput();
         }
@@ -76,19 +76,27 @@ namespace NetTask6.Views
                 searchViewDirector.Text, "");
         }
 
-        private void searchViewActor_TextChanged(object sender, EventArgs e)
+        private void OnSearchViewActorTextChanged(object sender, EventArgs e)
         {
             FireUserInput();
         }
 
-        private void searchViewYearInput_TextChanged(object sender, EventArgs e)
+        private void OnSearchViewYearInputTextChanged(object sender, EventArgs e)
         {
             FireUserInput();
         }
 
-        private void searchViewCountryInput_TextChanged(object sender, EventArgs e)
+        private void OnSearchViewCountryInputTextChanged(object sender, EventArgs e)
         {
             FireUserInput();
+        }
+        
+        private void OnSearchViewKeyUp(object sender, KeyEventArgs e)
+        {
+            if ((e.KeyCode & Keys.Enter) == Keys.Enter)
+            {
+                Search();
+            }
         }
     }
 }

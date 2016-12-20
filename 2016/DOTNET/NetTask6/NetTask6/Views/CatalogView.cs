@@ -21,6 +21,7 @@ namespace NetTask6.Views
         internal delegate void AboutOpenEventHandler();
         internal delegate void DeleteActorEventHandler(int position);
         internal delegate void SaveMovieEventHandler();
+        internal delegate void AddMovieActorEventHandler(string name);
 
         internal event RefillDatabaseEventHandler RefillDatabase;
         internal event EditFilmEventHandler EditFilm;
@@ -30,6 +31,7 @@ namespace NetTask6.Views
         internal event AboutOpenEventHandler AboutOpen;
         internal event DeleteActorEventHandler DeleteActor;
         internal event SaveMovieEventHandler SaveMovie;
+        internal event AddMovieActorEventHandler AddMovieActor;
 
         const int moviesInRow = 2;
 
@@ -243,7 +245,7 @@ namespace NetTask6.Views
 
         private void OnEditFormAddActorBtnClick(object sender, EventArgs e)
         {
-            //editFormAddActor.Text
+            if (AddMovieActor != null) { AddMovieActor(editFormAddActor.Text); }
         }
 
         private void OnEditFormDeleteActorClick(object sender, EventArgs e)

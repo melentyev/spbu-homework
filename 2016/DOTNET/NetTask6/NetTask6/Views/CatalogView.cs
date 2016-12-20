@@ -223,7 +223,9 @@ namespace NetTask6.Views
 
         private void OnCatalogViewFormClosing(object sender, FormClosingEventArgs e)
         {
-            var result = MessageBox.Show("Are you sure?", "Movies", MessageBoxButtons.OKCancel);
+            var result = MessageBox.Show(Properties.Resources.ApproveFormClosing,
+                Properties.Resources.ApplicationMainWindow,
+                MessageBoxButtons.OKCancel);
             if (result.HasFlag(DialogResult.Cancel))
             {
                 e.Cancel = true;

@@ -61,6 +61,15 @@ namespace NetTask6.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Фильмы.
+        /// </summary>
+        internal static string ApplicationMainWindow {
+            get {
+                return ResourceManager.GetString("ApplicationMainWindow", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Вы уверены что хотите удалить фильм &quot;{0}&quot;?.
         /// </summary>
         internal static string ApproveDeleteMovie {
@@ -75,6 +84,15 @@ namespace NetTask6.Properties {
         internal static string ApproveDeleteMovieCaption {
             get {
                 return ResourceManager.GetString("ApproveDeleteMovieCaption", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Вы уверены что хотите выйти?.
+        /// </summary>
+        internal static string ApproveFormClosing {
+            get {
+                return ResourceManager.GetString("ApproveFormClosing", resourceCulture);
             }
         }
         

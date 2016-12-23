@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Data.Entity;
@@ -49,7 +50,7 @@ namespace NetTask6.Repositories
 
         protected static string WildcardToPattern(string s)
         {
-            return s.Replace("?", "_").Replace("*", "%");
+            return String.Format("%{0}%", s.Replace("?", "_").Replace("*", "%"));
         }
     }
 }

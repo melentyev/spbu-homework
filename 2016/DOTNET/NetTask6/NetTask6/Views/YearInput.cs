@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using NetTask6.Helpers;
 namespace NetTask6.Views
 {
     public class YearInput: TextBox
     {
-        const int LumiereFirstFilmDate = 1895;
-
         private ErrorProvider errorProvider;
         internal bool IsValid
         {
@@ -15,12 +14,17 @@ namespace NetTask6.Views
                 int parsed;
                 if (Int32.TryParse(Text, out parsed))
                 {
-                    if (parsed >= LumiereFirstFilmDate && parsed <= DateTime.Now.Year)
-                    {
-                        return true;
-                    }
+                    return ValidationHelper.ValidateYear(parsed);
                 }
                 return false;
+            }
+        }
+        internal bool IsNumber
+        {
+            get
+            { 
+                int parsed;
+                return Int32.TryParse(Text, out parsed);
             }
         }
 
@@ -28,13 +32,13 @@ namespace NetTask6.Views
         {
             KeyPress += (sender, args) =>
             {
-                args.Handled = !Char.IsDigit(args.KeyChar);
+                args.Handled = !Char.IsDigit(args.KeyChar) && args.KeyChar != '\b';
             };
 
             Validating += (sender, args) =>
             {
                 errorProvider.SetError(this, 
-                    IsValid ? "" : String.Format(Properties.Resources.YearInputInvalid, LumiereFirstFilmDate));
+                    IsValid ? "" : String.Format(Properties.Resources.YearInputInvalid, ValidationHelper.LumiereFirstFilmDate));
             };
         }
         internal void SetErrorProvider(ErrorProvider ep) { errorProvider = ep; }

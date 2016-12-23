@@ -53,9 +53,13 @@ namespace NetTask6.Views
             var nameColumn = new DataGridViewTextBoxColumn();
             var yearColumn = new DataGridViewTextBoxColumn();
 
+            imageColumn.ImageLayout = DataGridViewImageCellLayout.Zoom;
+
             dataGridView1.Columns.Add(imageColumn);
             dataGridView1.Columns.Add(nameColumn);
             dataGridView1.Columns.Add(yearColumn);
+
+            
 
             imageColumn.Resizable = DataGridViewTriState.False;
             nameColumn.Resizable = DataGridViewTriState.False;
@@ -66,6 +70,8 @@ namespace NetTask6.Views
             yearColumn.ReadOnly = true;
 
             editFormYear.SetErrorProvider(editMovieFormErrorProvider);
+            editFormNameText.SetErrorProvider(editMovieFormErrorProvider);
+            editFormCountryText.SetErrorProvider(editMovieFormErrorProvider);
 
             editFormDirector.SetSource(directorsAutocompleteSource);
             editFormAddActor.SetSource(actorsAutocompleteSource);
@@ -102,20 +108,22 @@ namespace NetTask6.Views
             editMoviePanel.Width = this.ClientSize.Width;
             editMoviePanel.Show();
 
-            data.Changed += UpdateEditForm;
+            data.NameChanged += (m => editFormNameText.Text = m.Name);
+            data.YearChanged += (m => editFormYear.Text = m.Year.ToString());
+            data.CountryChanged += (m => editFormCountryText.Text = m.Country);
 
-            UpdateEditForm(data);
-        }
+            data.ImageChanged += (m =>
+            {
+                if (uploadMovieBox.Image != null) { ImagesHelper.DisposeImage(uploadMovieBox.Image); }
+                uploadMovieBox.Image = ImagesHelper.FromFile(m.Image);
+            });
 
-        private void UpdateEditForm(EditMovieViewModel data)
-        {
-            editFormNameText.Text = data.Name;
-            editFormYear.Text = data.Year.ToString();
-            editFormDirector.Text = data.Director.Name;
-
-            uploadMovieBox.Image = ImagesHelper.FromFile(data.Image);
-            editFormActorsListBox.Items.Clear();
-            editFormActorsListBox.Items.AddRange(data.Actors.Select(x => x.Name).ToArray());
+            data.DirectorChanged += (m => editFormDirector.Text = m.Director.Name);
+            data.ActorsChanged += (m =>
+            {
+                editFormActorsListBox.Items.Clear();
+                editFormActorsListBox.Items.AddRange(m.Actors.Select(x => x.Name).ToArray());
+            });
         }
 
         private void UpdateGridView(MoviesGridViewModel data) {
@@ -126,7 +134,7 @@ namespace NetTask6.Views
 
             foreach (DataGridViewRow row in dataGridView1.Rows)
             {
-                ((row.Cells[0] as DataGridViewImageCell).Value as Image).Dispose();
+                ImagesHelper.DisposeImage((row.Cells[0] as DataGridViewImageCell).Value as Image);
             }
             dataGridView1.Rows.Clear();
 
@@ -139,6 +147,8 @@ namespace NetTask6.Views
                 var imageCell = new DataGridViewImageCell();
                 var nameCell = new DataGridViewTextBoxCell() { Value = movie.Name };
                 var yearCell = new DataGridViewTextBoxCell() { Value = movie.Year };
+
+                imageCell.ImageLayout = DataGridViewImageCellLayout.Zoom;
 
                 cells.Add(imageCell);
 
@@ -176,10 +186,17 @@ namespace NetTask6.Views
 
         internal void SetEnabledState(bool enabled)
         {
-            foreach (Control c in Controls) { c.Enabled = enabled; }
+            var action = new Action(() =>
+            {
+                foreach (Control c in Controls) { c.Enabled = enabled; }
+                fileToolStripMenuItem.Enabled = enabled;
+                editToolStripMenuItem.Enabled = enabled;
+                helpToolStripMenuItem.Enabled = enabled;
+            });
+            if (InvokeRequired) { Invoke(action); } else { action(); }
         }
 
-        private void deleteFilmToolStripMenuItem_Click(object sender, EventArgs e)
+        private void OnDeleteFilmToolStripMenuItemClick(object sender, EventArgs e)
         {
 
             if (DeleteFilm != null) { DeleteFilm(GetSelectedMovies()); }
@@ -267,10 +284,13 @@ namespace NetTask6.Views
 
         private void OnCatalogViewResize(object sender, EventArgs e)
         {
-            int dgwidth = dataGridView1.Width - dataGridView1.RowHeadersWidth * 2;
-            dataGridView1.Columns[0].Width = dgwidth / 3;
-            dataGridView1.Columns[1].Width = dgwidth / 3;
-            dataGridView1.Columns[2].Width = dgwidth / 3;
+            if (dataGridView1.Columns.Count == 3)
+            {
+                int dgwidth = dataGridView1.Width - dataGridView1.RowHeadersWidth * 2;
+                dataGridView1.Columns[0].Width = dgwidth / 3;
+                dataGridView1.Columns[1].Width = dgwidth / 3;
+                dataGridView1.Columns[2].Width = dgwidth / 3;
+            }
         }
     }
 }

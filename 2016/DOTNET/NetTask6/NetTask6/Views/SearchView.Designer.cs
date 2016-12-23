@@ -30,7 +30,7 @@
         {
             this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
-            this.searchViewFilmNameEdit = new System.Windows.Forms.TextBox();
+            this.searchViewFilmNameEdit = new PlainTextInput();
             this.label2 = new System.Windows.Forms.Label();
             this.searchViewDirector = new System.Windows.Forms.ComboBox();
             this.searchViewActor = new System.Windows.Forms.ComboBox();
@@ -39,7 +39,7 @@
             this.searchFormBtnClear = new System.Windows.Forms.Button();
             this.searchMovieFormErrorProvider = new System.Windows.Forms.ErrorProvider(this.components);
             this.label4 = new System.Windows.Forms.Label();
-            this.searchViewCountryInput = new System.Windows.Forms.TextBox();
+            this.searchViewCountryInput = new PlainTextInput();
             this.label5 = new System.Windows.Forms.Label();
             this.searchViewYearInput = new NetTask6.Views.YearInput();
             ((System.ComponentModel.ISupportInitialize)(this.searchMovieFormErrorProvider)).BeginInit();
@@ -83,7 +83,7 @@
             this.searchViewDirector.Name = "searchViewDirector";
             this.searchViewDirector.Size = new System.Drawing.Size(278, 24);
             this.searchViewDirector.TabIndex = 4;
-            this.searchViewDirector.TextChanged += new System.EventHandler(this.searchViewDirector_TextChanged);
+            this.searchViewDirector.TextChanged += new System.EventHandler(this.OnSearchViewDirectorTextChanged);
             // 
             // searchViewActor
             // 
@@ -107,8 +107,7 @@
             // 
             // searchFormBtnSearch
             // 
-            this.searchFormBtnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchFormBtnSearch.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.searchFormBtnSearch.Location = new System.Drawing.Point(206, 346);
             this.searchFormBtnSearch.Name = "searchFormBtnSearch";
             this.searchFormBtnSearch.Size = new System.Drawing.Size(99, 23);
@@ -119,8 +118,7 @@
             // 
             // searchFormBtnClear
             // 
-            this.searchFormBtnClear.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.searchFormBtnClear.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.searchFormBtnClear.Location = new System.Drawing.Point(97, 346);
             this.searchFormBtnClear.Name = "searchFormBtnClear";
             this.searchFormBtnClear.Size = new System.Drawing.Size(101, 23);
@@ -188,6 +186,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.searchViewFilmNameEdit);
             this.Controls.Add(this.label1);
+            this.MinimumSize = new System.Drawing.Size(300, 400);
             this.Name = "SearchView";
             this.Text = "SearchView";
             ((System.ComponentModel.ISupportInitialize)(this.searchMovieFormErrorProvider)).EndInit();
@@ -199,7 +198,7 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox searchViewFilmNameEdit;
+        private PlainTextInput searchViewFilmNameEdit;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox searchViewDirector;
         private System.Windows.Forms.ComboBox searchViewActor;
@@ -210,6 +209,6 @@
         private System.Windows.Forms.Label label4;
         private YearInput searchViewYearInput;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox searchViewCountryInput;
+        private PlainTextInput searchViewCountryInput;
     }
 }

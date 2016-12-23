@@ -142,6 +142,15 @@
   <data name="MovieImagePlaceholder" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\MovieImagePlaceholder.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="PlainTextInputInvalid" xml:space="preserve">
+    <value>Недопустимые символы (только рус буквы, цифры, [-,.])</value>
+  </data>
+  <data name="SaveFailedValidationErrors" xml:space="preserve">
+    <value>Невозмозно сохранить из-за ошибок ввода</value>
+  </data>
+  <data name="SearchFailedValidationErrors" xml:space="preserve">
+    <value>Поиск невозможен из-за ошибок ввода</value>
+  </data>
   <data name="YearInputInvalid" xml:space="preserve">
     <value>Введен неверный год (должен быть &gt;= {0} и не в будущем)</value>
   </data>

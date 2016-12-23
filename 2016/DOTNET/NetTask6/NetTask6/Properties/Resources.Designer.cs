@@ -134,6 +134,33 @@ namespace NetTask6.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Недопустимые символы (только рус буквы, цифры, [-,.]).
+        /// </summary>
+        internal static string PlainTextInputInvalid {
+            get {
+                return ResourceManager.GetString("PlainTextInputInvalid", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Невозмозно сохранить из-за ошибок ввода.
+        /// </summary>
+        internal static string SaveFailedValidationErrors {
+            get {
+                return ResourceManager.GetString("SaveFailedValidationErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Поиск невозможен из-за ошибок ввода.
+        /// </summary>
+        internal static string SearchFailedValidationErrors {
+            get {
+                return ResourceManager.GetString("SearchFailedValidationErrors", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Введен неверный год (должен быть &gt;= {0} и не в будущем).
         /// </summary>
         internal static string YearInputInvalid {

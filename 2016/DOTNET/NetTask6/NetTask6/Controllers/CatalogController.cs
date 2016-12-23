@@ -21,7 +21,7 @@ namespace NetTask6.Controllers
         SearchViewModel searchViewModel;
         EditMovieViewModel editMovieViewModel;
 
-        IRepository<Movie> movieRepository;
+        IMovieRepository movieRepository;
         IRepository<Director> directorRepository;
         IRepository<Actor> actorRepository;
 
@@ -33,7 +33,6 @@ namespace NetTask6.Controllers
 
             moviesGridViewModel = new MoviesGridViewModel();
             searchViewModel = new SearchViewModel();
-            editMovieViewModel = new EditMovieViewModel();
 
             getMovies = new GetMoviesAsyncHelper(movieRepository, directorRepository, actorRepository);
         }
@@ -81,13 +80,15 @@ namespace NetTask6.Controllers
                 if (selected.Count > 0)
                 {
                     var movie = selected[0];
+                    editMovieViewModel = new EditMovieViewModel();
+                    catalogView.ShowMovieEditForm(editMovieViewModel);
                     editMovieViewModel.MovieId = movie.MovieId;
                     editMovieViewModel.Name = movie.Name;
                     editMovieViewModel.Year = movie.Year;
+                    editMovieViewModel.Country = movie.Country;
                     editMovieViewModel.Image = movie.Image;
                     editMovieViewModel.Actors = new List<Actor>(movie.Actors);
                     editMovieViewModel.Director = movie.Director;
-                    catalogView.ShowMovieEditForm(editMovieViewModel);
                 }
             };
 
@@ -139,6 +140,7 @@ namespace NetTask6.Controllers
 
             getMovies.OnStarted += (() => 
             {
+                catalogView.SetEnabledState(false);
                 catalogView.SetGridStatus(false);
                 catalogView.SetGridTitle(Properties.Resources.GridTitleLoading);
             });
@@ -149,14 +151,19 @@ namespace NetTask6.Controllers
 
         private async void SaveMovie()
         {
+            string directorName;
+            List<string> actorNames = new List<string>();
+            catalogView.SaveEditMovieViewModelState(editMovieViewModel, out directorName, actorNames);
+
+            if (!editMovieViewModel.IsValid) {
+                MessageBox.Show(Properties.Resources.SaveFailedValidationErrors);
+                return;
+            }
+
             catalogView.SetEnabledState(false);
 
             var id = editMovieViewModel.MovieId;
             Movie model = (await movieRepository.ToArrayAsync(movieRepository.GetAll().Where(x => x.MovieId == id)))[0];
-
-            string directorName;
-            List<string> actorNames = new List<string>();
-            catalogView.SaveEditMovieViewModelState(editMovieViewModel, out directorName, actorNames);
 
             Director[] existing = await directorRepository.ToArrayAsync(
                 directorRepository.GetAll().Where(x => x.Name == directorName));
@@ -179,7 +186,7 @@ namespace NetTask6.Controllers
         private async void DeleteMovie(List<Movie> selected)
         {
             bool confirmed = true;
-            for (int i = 0; i<selected.Count; i++)
+            for (int i = 0; i < selected.Count; i++)
             {
                 var name = selected[i].Name;
                 var res = MessageBox.Show(
@@ -193,7 +200,11 @@ namespace NetTask6.Controllers
             }
             if (confirmed)
             {
-                await Task.WhenAll(selected.Select(x => movieRepository.Delete(x)).ToArray());
+                catalogView.SetEnabledState(false);
+                foreach (var movie in selected)
+                {
+                    await movieRepository.Delete(movie);
+                }
                 GetMovies();
             }
         }
@@ -203,26 +214,35 @@ namespace NetTask6.Controllers
             searchView = new SearchView(searchViewModel);
             searchView.Visible = false;
 
-            searchView.UserInput += ((name, year, director, actor) =>
+            searchView.UserInput += ((name, year, country, director, actor) =>
             {
-                searchViewModel.Name = name;
                 searchViewModel.Year = year;
+                searchViewModel.Name = name;
+                searchViewModel.Country = country;
                 searchViewModel.Director = director;
                 searchViewModel.Actor = actor;
             });
 
             searchView.Search += (() =>
             {
-                string name = searchViewModel.Name;
-                string director = searchViewModel.Director;
-                string actor = searchViewModel.Actor;
-                GetMovies(name, searchViewModel.Year, searchViewModel.Country, director, actor);
+                if (!searchViewModel.IsValid)
+                {
+                    MessageBox.Show(Properties.Resources.SearchFailedValidationErrors);
+                    return;
+                }
+                
+                GetMovies(
+                    searchViewModel.Name, searchViewModel.Year, 
+                    searchViewModel.Country, 
+                    searchViewModel.Director, searchViewModel.Actor);
                 catalogView.Activate();
             });
 
             searchView.Clear += (() =>
             {
                 searchViewModel.Name = "";
+                searchViewModel.Year = 0;
+                searchViewModel.Country = "";
                 searchViewModel.Director = "";
                 searchViewModel.Actor = "";
             });
@@ -242,11 +262,14 @@ namespace NetTask6.Controllers
             string actor = null)
         {
             GetMoviesAsyncHelper.OnCompletedEventHandler onCompletedHandler = null;
-            var isEmptySearch = String.IsNullOrEmpty(movieName)
-                && year == 0
-                && String.IsNullOrEmpty(country)
-                && String.IsNullOrEmpty(director)
-                && String.IsNullOrEmpty(actor);
+
+            var criteriaParts = new List<string>();
+            if (!String.IsNullOrEmpty(movieName)) { criteriaParts.Add(String.Format("\"{0}\"", movieName)); }
+            if (year != 0) { criteriaParts.Add(year.ToString()); }
+            if (!String.IsNullOrEmpty(country)) { criteriaParts.Add(String.Format("\"{0}\"", country)); }
+            if (!String.IsNullOrEmpty(director)) { criteriaParts.Add(String.Format("\"{0}\"", director)); }
+            if (!String.IsNullOrEmpty(actor)) { criteriaParts.Add(String.Format("\"{0}\"", actor)); }
+            var criteria = String.Join(", ", criteriaParts);
 
             onCompletedHandler = ((movies) =>
             {
@@ -254,10 +277,12 @@ namespace NetTask6.Controllers
                 catalogView.Invoke(new Action(() =>
                 {
                     moviesGridViewModel.Movies = movies;
-                    catalogView.SetGridTitle(isEmptySearch ? 
+
+                    catalogView.SetGridTitle(criteria == "" ? 
                         Properties.Resources.GridTitleAllMovies : 
-                        String.Format(Properties.Resources.GridTitleSearchResult, movieName));
+                        String.Format(Properties.Resources.GridTitleSearchResult, criteria));
                     catalogView.SetGridStatus(true);
+                    catalogView.SetEnabledState(true);
                 }));
             });
             getMovies.OnCompleted += onCompletedHandler;

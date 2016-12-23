@@ -1,62 +1,79 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
+using NetTask6.Helpers;
 
 namespace NetTask6.Models
 {
     internal sealed class EditMovieViewModel
     {
         internal delegate void ChangedEventHandler(EditMovieViewModel data);
-        internal event ChangedEventHandler Changed;
+        internal event ChangedEventHandler MovieIdChanged;
+        internal event ChangedEventHandler NameChanged;
+        internal event ChangedEventHandler CountryChanged;
+        internal event ChangedEventHandler YearChanged;
+        internal event ChangedEventHandler ImageChanged;
+        internal event ChangedEventHandler DirectorChanged;
+        internal event ChangedEventHandler ActorsChanged;
 
         private int movieId;
         internal int MovieId
         {
             get { return movieId; }
-            set { movieId = value; Update(); }
+            set { movieId = value; if (MovieIdChanged != null) { MovieIdChanged(this); } }
         }
 
         private string name;
         internal string Name
         {
             get { return name; }
-            set { name = value; Update(); }
+            set { name = value; NameChanged(this); }
+        }
+
+        private string country;
+        internal string Country
+        {
+            get { return country; }
+            set { country = value; CountryChanged(this); }
         }
 
         private int year;
         internal int Year
         {
             get { return year; }
-            set { year = value; Update(); }
+            set { year = value; YearChanged(this); }
         }
 
         private string image;
         internal string Image
         {
             get { return image; }
-            set { image = value; Update(); }
+            set { image = value; ImageChanged(this); }
         }
 
         private Director director;
         internal Director Director
         {
             get { return director; }
-            set { director = value; Update(); }
+            set { director = value; DirectorChanged(this); }
         }
 
         private List<Actor> actors;
         internal List<Actor> Actors
         {
             get { return actors; }
-            set { actors = value; Update(); }
+            set { actors = value; ActorsChanged(this); }
         }
-        internal void ActorsRemoveAt(int i) { actors.RemoveAt(i); Update(); }
+        internal void ActorsRemoveAt(int i) { actors.RemoveAt(i); ActorsChanged(this); }
 
-        private void Update()
+        internal bool IsValid
         {
-            if (Changed != null) { Changed(this); }
+            get
+            {
+                return ValidationHelper.ValidateYear(year) &&
+                    ValidationHelper.ValidatePlainText(name) &&
+                    ValidationHelper.ValidatePlainText(country);
+            }
         }
     }
 }

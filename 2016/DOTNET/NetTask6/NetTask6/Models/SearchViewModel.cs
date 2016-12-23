@@ -1,47 +1,60 @@
-﻿namespace NetTask6.Models
+﻿using NetTask6.Helpers;
+
+namespace NetTask6.Models
 {
     internal sealed class SearchViewModel
     {
         internal delegate void ChangedEventHandler(SearchViewModel data);
-        internal event ChangedEventHandler Changed;
+        internal event ChangedEventHandler NameChanged;
+        internal event ChangedEventHandler CountryChanged;
+        internal event ChangedEventHandler YearChanged;
+        internal event ChangedEventHandler DirectorChanged;
+        internal event ChangedEventHandler ActorChanged;
 
         private string name;
         internal string Name {
             get { return name; }
-            set { name = value; Update(); }
+            set { bool upd = name != value; name = value; if (upd) { NameChanged(this); } }
         }
 
         private string country;
         internal string Country
         {
             get { return country; }
-            set { country = value; Update(); }
+            set { bool upd = country != value; country = value; if (upd) { CountryChanged(this); } }
         }
 
         private int year;
         internal int Year
         {
             get { return year; }
-            set { year = value; Update(); }
+            set { year = value; YearChanged(this); }
         }
 
         private string director;
         internal string Director
         {
             get { return director; }
-            set { director = value; Update(); }
+            set { bool upd = director != value; director = value; if (upd) { DirectorChanged(this); } }
         }
 
         private string actor;
         internal string Actor
         {
             get { return actor; }
-            set { actor = value; Update(); }
+            set { bool upd = actor != value; actor = value; if (upd) { ActorChanged(this); } }
         }
 
-        private void Update()
+        internal bool IsValid
         {
-            if (Changed != null) { Changed(this); }
+            get
+            {
+                return ValidationHelper.ValidateYear(year) &&
+                    ValidationHelper.ValidatePlainText(name) &&
+                    ValidationHelper.ValidatePlainText(country) &&
+                    ValidationHelper.ValidatePlainText(director) &&
+                    ValidationHelper.ValidatePlainText(actor);
+            }
         }
     }
 }

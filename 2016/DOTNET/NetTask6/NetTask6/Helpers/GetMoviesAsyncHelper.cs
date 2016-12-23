@@ -12,12 +12,12 @@ namespace NetTask6.Helpers
 {
     internal sealed class GetMoviesAsyncHelper: AsyncHelper<List<Movie> >
     {
-        IRepository<Movie> movieRepository;
+        IMovieRepository movieRepository;
         IRepository<Director> directorRepository;
         IRepository<Actor> actorRepository;
 
         internal GetMoviesAsyncHelper(
-            IRepository<Movie> _movieRepository,
+            IMovieRepository _movieRepository,
             IRepository<Director> _directorRepository,
             IRepository<Actor> _actorRepository)
         {
@@ -33,8 +33,7 @@ namespace NetTask6.Helpers
             {
                 try
                 {
-                    var movies = String.IsNullOrEmpty(movieName) ? movieRepository.GetAll()
-                        : movieRepository.TextSearch(movieName);
+                    var movies = movieRepository.TextSearchWithCountry(movieName, country);
                     if (year > 0)
                     {
                         movies = movies.Where(movie => movie.Year == year);

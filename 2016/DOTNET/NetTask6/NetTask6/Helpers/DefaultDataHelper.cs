@@ -60,6 +60,8 @@ namespace NetTask6.Helpers
                 new { Name ="Леон", Year = 1994u, Country = "Франция", Image="389.jpg",
                     Director = besson, Actors = new Actor[] { reno, oldman } },
 
+                new { Name ="Пятый элемент", Year = 1997u, Country = "Франция", Image="5elem.jpg",
+                    Director = besson, Actors = new Actor[] { oldman } },
             };
 
             var imagesBaseDir = Path.GetFullPath(Path.Combine(Application.StartupPath, @"..\..\DefaultPictures\"));
@@ -70,6 +72,7 @@ namespace NetTask6.Helpers
                     MovieId = i + 1,
                     Name = movieData[i].Name,
                     Year = (int)movieData[i].Year,
+                    Country = movieData[i].Country,
                     Image = imagesBaseDir + movieData[i].Image,
                     Director = movieData[i].Director,
                     Actors = movieData[i].Actors,

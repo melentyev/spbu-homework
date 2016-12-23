@@ -28,12 +28,16 @@ namespace NetTask6.Repositories
         }
         public IQueryable<Movie> TextSearchWithCountry(string s, string country)
         {
-            s = WildcardToPattern(s);
-            var q = data.Where(x => SqlFunctions.PatIndex(s, x.Name) > 0);
+            IQueryable<Movie> q = data;
+            if (!String.IsNullOrWhiteSpace(s))
+            {
+                s = WildcardToPattern(s);
+                q = q.Where(x => SqlFunctions.PatIndex(s.ToLower(), x.Name.ToLower()) > 0);
+            }
             if (!String.IsNullOrWhiteSpace(country))
             {
                 country = WildcardToPattern(country);
-                q = q.Where(x => SqlFunctions.PatIndex(country, x.Country) > 0);
+                q = q.Where(x => SqlFunctions.PatIndex(country.ToLower(), x.Country.ToLower()) > 0);
             }
             return q;
         }

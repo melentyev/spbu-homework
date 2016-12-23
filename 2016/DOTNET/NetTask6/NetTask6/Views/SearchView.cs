@@ -1,20 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 using NetTask6.Models;
 
 namespace NetTask6.Views
 {
-    internal sealed partial class SearchView : Form
+    internal sealed partial class SearchView: Form
     {
-        internal delegate void UserInputEventHandler(string name, int year, string director, string actor);
+        internal delegate void UserInputEventHandler(string name, int year, string country, string director, string actor);
         internal delegate void SearchEventHandler();
         internal delegate void ClearEventHandler();
 
@@ -26,29 +19,16 @@ namespace NetTask6.Views
         {
             InitializeComponent();
             searchViewYearInput.SetErrorProvider(searchMovieFormErrorProvider);
-            data.Changed += UpdateFromModel;
-        }
+            searchViewFilmNameEdit.SetErrorProvider(searchMovieFormErrorProvider);
+            searchViewCountryInput.SetErrorProvider(searchMovieFormErrorProvider);
 
-        private void UpdateFromModel(SearchViewModel data)
-        {
-            if (this.searchViewFilmNameEdit.Text != data.Name)
-            {
-                this.searchViewFilmNameEdit.Text = data.Name;
-            }
-            if (this.searchViewCountryInput.Text != data.Country)
-            {
-                this.searchViewCountryInput.Text = data.Country;
-            }
-            if (this.searchViewDirector.Text != data.Director)
-            {
-                this.searchViewDirector.Text = data.Director;
-            }
-            if (this.searchViewActor.Text != data.Actor)
-            {
-                this.searchViewActor.Text = data.Actor;
-            }
+            data.NameChanged     += (m => searchViewFilmNameEdit.Text = m.Name);
+            data.YearChanged     += (m => searchViewYearInput.Text = m.Year == 0 ? "" : m.Year.ToString());
+            data.CountryChanged  += (m => searchViewCountryInput.Text = m.Country);
+            data.DirectorChanged += (m => searchViewDirector.Text = m.Director);
+            data.ActorChanged    += (m => searchViewActor.Text = m.Actor);
         }
-
+        
         private void OnSearchFormBtnClearClick(object sender, EventArgs e)
         {
             if (Clear != null) { Clear(); }
@@ -64,16 +44,9 @@ namespace NetTask6.Views
             FireUserInput();
         }
 
-        private void searchViewDirector_TextChanged(object sender, EventArgs e)
+        private void OnSearchViewDirectorTextChanged(object sender, EventArgs e)
         {
             FireUserInput();
-        }
-
-        private void FireUserInput()
-        {
-            UserInput(searchViewFilmNameEdit.Text,
-                searchViewYearInput.IsValid ? Int32.Parse(searchViewYearInput.Text) : 0,
-                searchViewDirector.Text, "");
         }
 
         private void OnSearchViewActorTextChanged(object sender, EventArgs e)
@@ -90,9 +63,22 @@ namespace NetTask6.Views
         {
             FireUserInput();
         }
-        
+
+        private void FireUserInput()
+        {
+            UserInput(searchViewFilmNameEdit.Text,
+                searchViewYearInput.IsNumber ? Int32.Parse(searchViewYearInput.Text) : 0,
+                searchViewCountryInput.Text,
+                searchViewDirector.Text,
+                searchViewActor.Text);
+        }
+
         private void OnSearchViewKeyUp(object sender, KeyEventArgs e)
         {
+            if (e.KeyCode == Keys.Escape)
+            {
+                Close();
+            }
             if ((e.KeyCode & Keys.Enter) == Keys.Enter)
             {
                 Search();

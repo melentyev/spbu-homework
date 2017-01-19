@@ -18,6 +18,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import com.opencsv.CSVReader;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.tuple.Pair;
 import org.tartarus.snowball.ext.*;
 
@@ -82,6 +83,9 @@ class Parser {
 
     private void preprocessInputLine() {
         m_CurrentLine = m_CurrentLine
+            .replaceAll("https?://(\\w+|\\.|/)+", "")
+            .replaceAll("Images\\[\\d+(,\\s\\d+)?]", "")
+            .replaceAll("\\(F\\)", "")
             .replace("\"", "")
             .replace("'", "")
             .replace('ё', 'е');
@@ -117,7 +121,6 @@ class Parser {
                 Character.isDigit(c);
     }
 }
-
 
 interface ITextProvider {
     String nextLine();
@@ -169,6 +172,18 @@ class TxtProvider implements ITextProvider {
     }
 }
 
+class StringProvider implements ITextProvider {
+    private String str;
+    StringProvider(String s) { str = s; }
+    @Override
+    public String nextLine() {
+        String tmp = str;
+        str = null;
+        return tmp;
+    }
+}
+
+
 class NLPSolver {
     int m_MaxNgram;
     private static final int MIN_FREQ_THRESHOLD = 2;
@@ -183,16 +198,44 @@ class NLPSolver {
     private List<List<String> > choosenNgrams;
 
     NLPSolver() {
-        m_MaxNgram = 5;
+        m_MaxNgram = 3;
     }
 
-    void run(String fileName, int parserLimit) throws IOException {
+    static void runOnDocumentsCsv(String fileName, int parserLimit) {
+        // System.err.println("runOnDocumentsCsv: (" + fileName + ")");
+        try (CSVReader reader = new CSVReader(new FileReader(fileName))) {
+            String[] line = reader.readNext();
+            for (int i = 0; i < parserLimit; i++) {
+                String docText = (line = reader.readNext()) != null ? line[3] : null;
+                if (docText == null || docText.length() < 280) { continue; }
+                NLPSolver solver = new NLPSolver();
+                solver.runOnString(docText, parserLimit);
+
+                if (solver.hasResults()) {
+                    System.out.println(line[2]);
+                    solver.writeResults();
+                    System.out.println();
+                }
+            }
+        }
+        catch (Exception e) {
+            throw new RuntimeException();
+        }
+    }
+
+    private void runOnString(String s, int parserLimit) throws IOException {
+        // initialization
+        Parser parser = new Parser(new StringProvider(s), parserLimit);
+        run(parser);
+    }
+    void runOnFile(String fileName, int parserLimit) throws IOException {
         // initialization
         Parser parser = new Parser(fileName.endsWith(".csv") ?
                 new CSVProvider(fileName) :
                 new TxtProvider(fileName), parserLimit);
-
-
+        run(parser);
+    }
+    void run(Parser parser) throws IOException {
         needTopNgrams = new ArrayList<>(Arrays.asList(0, 17, 12, 8, 5, 3));
 
         ngrams = new ArrayList<>();
@@ -216,7 +259,8 @@ class NLPSolver {
 
         compressNgrams();
 
-        List<String> uniqWords = new ArrayList<>(ngrams.get(1).keySet());
+        List<String> uniqWords = new ArrayList<>(ngrams.get(1).keySet())
+                .stream().filter(s -> !s.matches("\\d{1,2}")).collect(Collectors.toList());
         uniqWords.sort((a, b) -> {
             double afreq = ngrams.get(1).get(a);
             if (a.matches("^\\d+$")) { afreq /= 10.0; }
@@ -258,7 +302,6 @@ class NLPSolver {
                 }
             });
         }
-        writeResults();
     }
 
     private void handleWords(List<String> words) {
@@ -306,14 +349,22 @@ class NLPSolver {
         }
     }
 
-    private void writeResults() {
+    boolean hasResults() {
+        for (int ngrlen = m_MaxNgram; ngrlen >= 1; ngrlen--) {
+            if (choosenNgrams.get(ngrlen).size() > 0) { return true; }
+        }
+        return false;
+    }
+    void writeResults() {
         for (int ngrlen = m_MaxNgram; ngrlen >= 1; ngrlen--) {
             final Map<String, String> bucket = stem2Full.get(ngrlen);
-            choosenNgrams.get(ngrlen).forEach(s -> {
-                System.out.println(bucket.get(s));
-            });
+            String ngram = StringUtils.join(choosenNgrams.get(ngrlen).stream().map(bucket::get).toArray(), ',');
+            if (!ngram.equals("")) {
+                System.out.println('[' + ngram + ']');
+            }
         }
     }
+
     private int cmpDouble(double a, double b) {
         if (a < b) return -1;
         if (a > b) return 1;
@@ -325,20 +376,26 @@ public class Main {
 
     public static void main(String args[]) throws Exception
     {
-        NLPSolver solver = new NLPSolver();
         int limit = 5000;
-        String file = "wiki-rus-name.txt";
+        String file = "wiki-rus-name.txt"; boolean documentsCsv = false;
+        //String file = "new_best_train_content.csv"; boolean documentsCsv = true;
 
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {
-                if (args[i].equals("-l")) {
-                    limit = Integer.valueOf(args[++i]);
-                }
-                else {
-                    file = args[i];
+                switch (args[i]) {
+                    case "--csvdocs":
+                        documentsCsv = true;
+                        break;
+                    case "-l":
+                        limit = Integer.valueOf(args[++i]);
+                        break;
+                    default:
+                        file = args[i];
+                        break;
                 }
             }
         }
+
         //String fileName = "/home/user/Documents/MLHW/train_triplets.txt.zip";
         //Solver solver = new Solver(fileName);
 
@@ -346,6 +403,13 @@ public class Main {
         //solver.run("/home/user/Documents/MLHW/wikitext2.txt");
         //solver.run("/home/user/Documents/MLHW/dostoevsky.txt");
         //solver.run("/home/user/Documents/MLHW/my_content.txt");
-        solver.run(file, limit);
+        if (documentsCsv) {
+            NLPSolver.runOnDocumentsCsv(file, limit);
+        }
+        else {
+            NLPSolver solver = new NLPSolver();
+            solver.runOnFile(file, limit);
+            solver.writeResults();
+        }
     }
 }

@@ -236,7 +236,8 @@ class NLPSolver {
         run(parser);
     }
     void run(Parser parser) throws IOException {
-        needTopNgrams = new ArrayList<>(Arrays.asList(0, 17, 12, 8, 5, 3));
+        //needTopNgrams = new ArrayList<>(Arrays.asList(0, 17, 12, 8, 5, 3));
+        needTopNgrams = new ArrayList<>(Arrays.asList(0, 45, 35, 25, 15, 3));
 
         ngrams = new ArrayList<>();
         for (int i = 0; i <= m_MaxNgram; i++) { ngrams.add(new HashMap<>()); }
@@ -248,6 +249,7 @@ class NLPSolver {
         choosenNgrams.add(null);
 
         // start proccessing
+        System.err.println("start processing");
         int totalWords = 0;
         List<String> words = parser.parseLine();
         while (words != null) {
@@ -256,8 +258,11 @@ class NLPSolver {
             words = parser.parseLine();
         }
         final double totalWordsF = totalWords * 1.0;
+        System.err.println("data read");
 
         compressNgrams();
+
+        System.err.println("ngrams compressed");
 
         List<String> uniqWords = new ArrayList<>(ngrams.get(1).keySet())
                 .stream().filter(s -> !s.matches("\\d{1,2}")).collect(Collectors.toList());
@@ -269,6 +274,8 @@ class NLPSolver {
             return cmpDouble(bfreq, afreq);
         });
         choosenNgrams.add(uniqWords.subList(0, Math.min(needTopNgrams.get(1), uniqWords.size())));
+
+        System.err.println("uniq words sorted");
 
         for (int i = 2; i <= m_MaxNgram; i++) {
             final int ind = i;
@@ -301,6 +308,7 @@ class NLPSolver {
                     choosenNgrams.get(iprev).remove(sright);
                 }
             });
+            System.err.println("loop for " + String.valueOf(i) + " finished.");
         }
     }
 
@@ -377,8 +385,8 @@ public class Main {
     public static void main(String args[]) throws Exception
     {
         int limit = 5000;
-        String file = "wiki-rus-name.txt"; boolean documentsCsv = false;
-        //String file = "new_best_train_content.csv"; boolean documentsCsv = true;
+        //String file = "wiki-rus-name.txt"; boolean documentsCsv = false;
+        String file = "new_best_train_content.csv"; boolean documentsCsv = false;
 
         if (args.length > 0) {
             for (int i = 0; i < args.length; i++) {

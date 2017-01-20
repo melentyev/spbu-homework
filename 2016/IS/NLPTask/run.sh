@@ -20,6 +20,7 @@ do
     java -jar $JAR $test -l 0 > results/$test.out
 done
 
-test=new_best_train_content.csv; java -jar $JAR $test -l 10000 --csvdocs > results/$test.out
+test=new_best_train_content.csv; java -jar $JAR $test -l 10000 --csvdocs > results/$test.csvdocs.out
+test=new_best_train_content.csv; java -jar $JAR $test -l 2000000 > results/$test.out
 
 echo "Done.";
